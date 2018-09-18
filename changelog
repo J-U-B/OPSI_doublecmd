@@ -1,0 +1,61 @@
+doublecmd 0.8.4-5:
+	* complete redesign
+	* ready for O4I (Makefile, postinst, product_variables.opsiinc)
+	* new property: custom_default_config (doublecmd.xml)
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2018-09-18 12:39:44 +0200
+
+
+doublecmd 0.8.4-4 release:
+	* Update doublecmd -> 0.8.4
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2018-09-12 11:02:32 +0200
+
+
+doublecmd 0.8.3-4 release:
+	* Update doublecmd -> 0.8.3
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2018-06-18 12:52:59 +0200
+
+
+doublecmd 0.8.2-4 release:
+	* Update doublecmd -> 0.8.2
+	* fix OS detection for Windows 10
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2018-02-27 11:27:04 +0100
+
+
+doublecmd 0.7.6-3 release:
+	* complete redesign
+	* additional MSI installer
+	* choose installer type (MSI/INNO) as property (INNO is default)
+	* update doublecmd -> 0.7.6
+	* default architecture: 64 bit
+	* new:
+		* uninst_section_search.inc
+		* exitcode_msi.ins
+		* checkvars.sh
+	* requirement for winst: 4.11.6
+	* new icon set
+	* prepare postinst for handling test packages
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2016-11-10 18:39:15 +0100
+
+
+doublecmd 0.7.6-2 release:
+	* Update doublecmd -> 0.7.6
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2016-11-10 17:32:08 +0100
+
+
+doublecmd 0.6.6-2 release:
+	* Update doublecmd -> 0.6.6
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2015-10-20 09:13:26 +0200
+
+
+doublecmd 0.6.0-2 testing:
+	* Update doublecmd -> 0.6.0
+	* Update psdetail 0.1.8.2dev -> 0.1.8.3dev
+	* Redesign setup.ins, delsub.ins
+	* Property fuer Software-Architektur: 32 bit, 64 bit, native
+	* neu:
+		* product_variables.ins
+		* exitcode_innno.ins
+	* Logfiles fuer Install/Uninstall
+	* Anpassung checkinstance.ins
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2015-02-16 20:07:03 +0100
+

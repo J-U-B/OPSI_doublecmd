@@ -1,0 +1,26 @@
+{  
+	"_": "=== OPSI package variables ===",
+	"O_PKG_VER"         : "5",
+	"O_SOFTWARE_VER"    : "0.8.4",
+	"O_SOFTWARE"        : "doublecmd",
+	"O_RELEASE_DATE"    : "{{M_TODAY}}",
+	"O_INST_LOG"        : "/tmp/doublecmd__opsi_package_install.log",
+	
+	"STAGE"             : "{{M_STAGE}}",
+	"TESTPREFIX"	    : "{{M_TESTPREFIX}}",
+	"ORGPREFIX"         : "{{M_ORGPREFIX}}",
+	"ORGNAME"           : "{{M_ORGNAME}}",
+
+	"_":"=== conditions ===",
+	"ifdef_auto_download"           :true,
+	
+	"ifdef_testing"                 :{{M_TESTING}},	
+	"ifdef_allinc"                  :{{M_ALLINC}},	
+	"ifdef_keepfiles"				:{{M_KEEPFILES}},
+	
+	"_":"=== some tuning ===",
+	"DEFAULT_TESTING_LOGLEVEL" : "7",
+	"DEFAULT_RELEASE_LOGLEVEL" : "5",
+	
+	"_":""
+}
