@@ -1,3 +1,8 @@
+doublecmd 0.8.4-6:
+	* fixed support for O4I/DFN packages in preinst.in/postinst.in
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2018-10-26 08:43:53 +0200
+
+
 doublecmd 0.8.4-5:
 	* complete redesign
 	* ready for O4I (Makefile, postinst, product_variables.opsiinc)

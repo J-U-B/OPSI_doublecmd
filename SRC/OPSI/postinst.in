@@ -1,6 +1,7 @@
 #! /bin/bash
 #=====================================================================
 # postinst script for: (generic)
+# Version: 2.1
 #
 # This script executes after unpacking files from that archive and
 # registering the product at the depot.
@@ -10,7 +11,7 @@
 #   PRODUCT_ID: id of the current product
 #   CLIENT_DATA_DIR: directory which contains the installed client data
 #=====================================================================
-# J. Boettge <boettge@mpi-halle.mpg.de>	2018-09-18 08:28:08 +0200
+# J. Boettge <boettge@mpi-halle.mpg.de>  2018-10-26 07:45:20 +0200
 #=====================================================================
 
 TS=$(date +"%s")
@@ -18,12 +19,12 @@ LOGFILE={{O_INST_LOG}}
 
 exec >> $LOGFILE
 exec 2>&1
-#chgrp opsiadmin $LOGFILE
-#chmod g+rw $LOGFILE
+chgrp opsiadmin $LOGFILE
+chmod g+rw $LOGFILE
 
-echo "=================================================="
+echo "==========================================================================="
 echo "${PRODUCT_ID} ({{ORGNAME}}) POSTINST LOG"
-echo "=================================================="
+echo "==========================================================================="
 date +'Start: %F  %H:%M:%S'
 
 SRC="${CLIENT_DATA_DIR}/../_SOURCE/${PRODUCT_ID##0_}"
@@ -41,8 +42,8 @@ P=${P/#test_/}
 [ "${P}" = "${P##o4i_}" ] && IS_O4I=false || IS_O4I=true
 [ "${P}" = "${P##dfn_}" ] && IS_DFN=false || IS_DFN=true
 
-
-if [ $IS_O4I == true -o $IS_DFN == true]; then
+if [ $IS_O4I == true -o $IS_DFN == true ]; then
+	 echo "*** O4I package detected ***"
 	 [ ! -d "${DST}" -a ! -d $TMP_DIR/files ] && mkdir $DST
 else
 	### symlink files directory to ../_SOURCE/${PRODUCT_ID##0_}
@@ -70,7 +71,7 @@ fi
 ### restore custom directories
 if [ -d $TMP_DIR ]; then
 	echo 'Restoring previous directories...'
-	TMP_DIR=`realpath $TMP_DIR`
+	TMP_DIR=`readlink -f $TMP_DIR`
 	for DIRNAME in custom files; do
 		echo "* [${DIRNAME}]"
 		if [ -d $TMP_DIR/${DIRNAME} ]; then
