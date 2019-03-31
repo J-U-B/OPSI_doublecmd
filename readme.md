@@ -49,7 +49,7 @@ generiert werden sollen (intern, DFN; testing/release) wurde hierfuer ein
 **<code>Makefile</code>** erstellt. Darueber hinaus steuert **<code>spec.json</code>** 
 die Erstellung der Pakete.
 
-Im Idealfall ist beim Erscheinen einer neuen Release des *Doubble Commander* lediglich die
+Im Idealfall ist beim Erscheinen einer neuen Release des *Double Commander* lediglich die
 **<code>spec.json</code>** anzupassen.
 
 
@@ -129,7 +129,7 @@ entfaellt dieser Abschnitt.
 Je nach Art des erstellten Paketes erfolgt bei der Installation im Depot durch 
 das <code>postinst</code>-Script der Download der Software vom Hersteller (Windows, 32 und 64 Bit).  
 Ein manueller Download sollte dann nicht erforderlich sein. 
-Auf dem Depot-Server ist **wget** erforderlich.
+Auf dem Depot-Server ist **curl** bzw. **wget** erforderlich.
 
 Das Gesamtvolumen der herunterzuladenden Dateien betraegt ca. **20 MByte**.
 
