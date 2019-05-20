@@ -158,7 +158,7 @@ o4i: header
 dfn: header
 	@echo "---------- building DFN package ----------------------------------"
 	@make 	TESTPREFIX=""    			\
-			ORGNAME="DFN"    			\
+			ORGNAME="O4I"    			\
 			ORGPREFIX="dfn_" 			\
 			STAGE="release"  			\
 	build
@@ -198,7 +198,7 @@ o4i_test_noprefix: header
 dfn_test: header
 	@echo "---------- building DFN testing package --------------------------"
 	@make 	TESTPREFIX="test_"  		\
-			ORGNAME="DFN"    			\
+			ORGNAME="O4I"    			\
 			ORGPREFIX="dfn_" 			\
 			STAGE="testing"  			\
 	build
@@ -206,7 +206,7 @@ dfn_test: header
 dfn_test_0: header
 	@echo "---------- building DFN testing package --------------------------"
 	@make 	TESTPREFIX="0_"  			\
-			ORGNAME="DFN"    			\
+			ORGNAME="O4I"    			\
 			ORGPREFIX="dfn_" 			\
 			STAGE="testing"  			\
 	build
@@ -214,7 +214,7 @@ dfn_test_0: header
 dfn_test_noprefix: header
 	@echo "---------- building DFN testing package --------------------------"
 	@make 	TESTPREFIX=""    			\
-			ORGNAME="DFN"    			\
+			ORGNAME="O4I"    			\
 			ORGPREFIX="dfn_" 			\
 			STAGE="testing"  			\
 	build

@@ -1,3 +1,9 @@
+doublecmd 0.9.3-7:
+	* product update --> 0.9.3
+	* changed ORGNAME in Makefile/control for dfn_ packages to O4I
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2019-05-20 07:17:20 +0200
+	
+
 doublecmd 0.9.2-7:
 	* product update --> 0.9.2
 	-- J. Boettge <boettge@mpi-halle.mpg.de>  2019-03-31 16:40:15 +0200
