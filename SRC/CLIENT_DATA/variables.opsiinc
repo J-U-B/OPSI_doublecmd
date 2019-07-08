@@ -4,14 +4,16 @@
 ; This file contains all possible variables, excluding the opsi-system
 ; variables, for the opsi-winst scripts in use.
 ;
-; J. Boettge <boettge@mpi-halle.mpg.de>  2018-09-18 12:56:18 +0200
+; J. Boettge <boettge@mpi-halle.mpg.de>  2019-07-08 12:23:31 +0200
 ;=====================================================================
 
+DefStringList $LanguageMap$
 DefStringList $MAP$
 DefStringList $ResultList$
 DefStringList $TempList$
 
 DefVar $CheckBin$
+DefVar $ConfigXML$
 DefVar $currentLogLevel$
 DefVar $CustomConfig$
 DefVar $CustomPostInstall$
@@ -21,6 +23,7 @@ DefVar $DisplayName$
 DefVar $ErrorMsg$
 DefVar $ExitCode$
 DefVar $FullProductId$
+DefVar $Img_Config$
 DefVar $Img_Install$
 DefVar $Img_Install_Custom$
 DefVar $Img_Uninstall$
@@ -41,13 +44,18 @@ DefVar $isINNO$
 ; DefVar $isMSI$
 ; DefVar $isNSIS$
 DefVar $isO4I$
+DefVar $LanguageCode$
+DefVar $LanguageFile$
 DefVar $LogDir$
 DefVar $LogLevelDefault$
 DefVar $MainBin$
 DefVar $MinimumSpace$
 DefVar $NTVersion$
+DefVar $PathToExe$
 DefVar $ProductId$
 DefVar $ProductName$
+DefVar $ProductFilter$
+DefVar $ProductVersionFilter$
 DefVar $RegInno$
 DefVar $RegKey$
 DefVar $RegKeyPath$
@@ -55,9 +63,13 @@ DefVar $RegPathUninstall32$
 DefVar $RegPathUninstall64$
 DefVar $RegProductID$
 DefVar $RegSearchOpts$
+DefVar $result$
 DefVar $SearchPattern$
+DefVar $Stage$
 DefVar $StrippedProductId$
 DefVar $sw_arch$
+DefVar $sw_lang$
+DefVar $System_Language$
 DefVar $SystemType$
 DefVar $Testing$
 DefVar $TimeDiff$

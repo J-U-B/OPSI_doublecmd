@@ -1,7 +1,7 @@
 ;=====================================================================
 ; product specific variables DOUBLE COMMANDER
 ;
-; J. Boettge <boettge@mpi-halle.mpg.de>  2018-09-18 12:57:28 +0200
+; J. Boettge <boettge@mpi-halle.mpg.de>  2019-07-08 13:04:31 +0200
 ;=====================================================================
 
 include_insert "%ScriptPath%\variables.opsiinc"
@@ -12,12 +12,20 @@ Set $ProductName$     	= getValue("name", $MAP$)
 Set $Version$         	= getValue("ProductVersion", $MAP$)
 Set $SystemType$      	= GetSystemType
 Set $NTVersion$   		= GetMsVersionInfo
+Set $LanguageMap$ 		= GetLocaleInfoMap
+Set $System_Language$ 	= lower(getValue("system_default_language_id", $LanguageMap$))
+Set $Stage$				= lower("{{STAGE}}")
+
+requiredWinstVersion >= "4.11.6"
+
+;-----------------------------------------------------------
+;*** helper functions
+;-----------------------------------------------------------
+importlib "helpers.opsifunc"
 
 ;-----------------------------------------------------------
 ;*** basic requirements
 ;-----------------------------------------------------------
-requiredWinstVersion >= "4.11.6"
-
 if CompareDotSeparatedNumbers($NTVersion$, "<", "6.1")
 	LogError "OS is not Windows 7 or above"
 	isFatalError
@@ -31,12 +39,14 @@ if not ($SystemType$ = "64 Bit System")
 endif
 
 ;-----------------------------------------------------------
+;*** detect TEST/RELEASE package
 ;*** get LogLevel from property
 Set $LogLevelDefault$ = GetProductProperty("log_level","default")
 ;-----------------------------------------------------------
 ;*** detect testing package:
-if (strPos($FullProductId$, "0_") = "0") and (strPos($FullProductId$, "test_") = "0")
+if (strPos($FullProductId$, "0_") = "0") and (strPos($FullProductId$, "test_") = "0") and (strPos($Stage$,"test") = "0")
 	; not a testing package
+	comment "INFO: RELEASE package detected"
 	set $ProductId$  	= $FullProductId$ 
 	set $Testing$ 		= "false"
 	if ($LogLevelDefault$ = "default")
@@ -44,8 +54,12 @@ if (strPos($FullProductId$, "0_") = "0") and (strPos($FullProductId$, "test_") =
 	endif
 else
 	; this is a testing package
-	comment "Prefix for testing package detected"
-	set $ProductId$  		= strPart($FullProductId$, calculate(strPos($FullProductId$,"_") + "+1"), strLength($FullProductId$))
+	comment "INFO: TESTING package detected"
+	if (strPos($FullProductId$, "0_") = "0") and (strPos($FullProductId$, "test_") = "0")
+		set $ProductId$	= $FullProductId$
+	else
+		set $ProductId$	= strPart($FullProductId$, calculate(strPos($FullProductId$,"_") + "+1"), strLength($FullProductId$))
+	endif
 	set $Testing$ 		= "true"
 	if ($LogLevelDefault$ = "default")
 		set $LogLevelDefault$  	= "{{DEFAULT_TESTING_LOGLEVEL}}"
@@ -67,17 +81,29 @@ endif
 ;-----------------------------------------------------------
 ;*** Images
 ;-----------------------------------------------------------
-if ($isO4I$ = "true")
-	set $Img_Install$		= "%ScriptPath%\images\" + $StrippedProductId$ + "_install_o4i.png"
+if (FileExists("%ScriptPath%\..\lib\icons\%installingProdName%.png"))
+	set $Img_Install$			= "%ScriptPath%\..\lib\icons\%installingProdName%.png"
+	set $Img_Install_Custom$	= "%ScriptPath%\..\lib\icons\%installingProdName%.png"
+	Set $Img_Uninstall$			= "%ScriptPath%\..\lib\icons\%installingProdName%.png"
+	Set $Img_Uninstall_Custom$	= "%ScriptPath%\..\lib\icons\%installingProdName%.png"
+	Set $Img_Prepare$			= "%ScriptPath%\..\lib\icons\%installingProdName%.png"
+	Set $Img_Plugins$			= "%ScriptPath%\..\lib\icons\%installingProdName%.png"
+	Set $Img_Config$			= "%ScriptPath%\..\lib\icons\%installingProdName%.png"
+	Set $Img_Update$			= "%ScriptPath%\..\lib\icons\%installingProdName%.png"
 else
-	set $Img_Install$		= "%ScriptPath%\images\" + $StrippedProductId$ + "_install.png"
+	if ($isO4I$ = "true")
+		set $Img_Install$		= "%ScriptPath%\images\" + $StrippedProductId$ + "_install_o4i.png"
+	else
+		set $Img_Install$		= "%ScriptPath%\images\" + $StrippedProductId$ + "_install.png"
+	endif
+	set $Img_Install_Custom$	= "%ScriptPath%\images\" + $StrippedProductId$ + "_install_custom.png"
+	Set $Img_Uninstall$			= "%ScriptPath%\images\" + $StrippedProductId$ + "_uninstall.png"
+	Set $Img_Uninstall_Custom$	= "%ScriptPath%\images\" + $StrippedProductId$ + "_uninstall_custom.png"
+	Set $Img_Prepare$			= "%ScriptPath%\images\" + $StrippedProductId$ + "_prepare.png"
+	Set $Img_Plugins$			= "%ScriptPath%\images\" + $StrippedProductId$ + "_plugins.png"
+	Set $Img_Config$			= "%ScriptPath%\images\" + $StrippedProductId$ + "_config.png"
+	Set $Img_Update$			= "%ScriptPath%\images\" + $StrippedProductId$ + "_update.png"
 endif
-set $Img_Install_Custom$	= "%ScriptPath%\images\" + $StrippedProductId$ + "_install_custom.png"
-Set $Img_Uninstall$			= "%ScriptPath%\images\" + $StrippedProductId$ + "_uninstall.png"
-Set $Img_Uninstall_Custom$	= "%ScriptPath%\images\" + $StrippedProductId$ + "_uninstall_custom.png"
-Set $Img_Prepare$			= "%ScriptPath%\images\" + $StrippedProductId$ + "_prepare.png"
-Set $Img_Plugins$			= "%ScriptPath%\images\" + $StrippedProductId$ + "_plugins.png"
-Set $Img_Update$			= "%ScriptPath%\images\" + $StrippedProductId$ + "_update.png"
 
 comment "preparing..."
 ShowBitmap $Img_Prepare$ $ProductName$
@@ -118,11 +144,9 @@ if ($SystemType$="x86 System") and ($sw_arch$="64")
 endif
 
 ;-----------------------------------------------------------
-;*** property: language - "de_DE, "en_US"
-; application language defined via environment variable LANG
+;*** property: default_language - "auto", "de, "en", ...
 ;-----------------------------------------------------------
-; ...not yet implemented
-; Set $sw_lang$ 				= GetProductProperty("default_language","en_US")
+Set $sw_lang$ 				= GetProductProperty("default_language","sysnative")
 
 ;-----------------------------------------------------------
 ;*** property: create desktop/startmenu/quickstart link?
@@ -130,7 +154,8 @@ endif
 Set $pr_DesktopLink$ 		= GetProductProperty("link_desktop","False")
 
 ;-----------------------------------------------------------
-;*** properties: post install/uninstall
+;*** properties: custom post install/uninstall
+;                config template
 ;-----------------------------------------------------------
 set $CustomPostInstall$ 	= getProductProperty("custom_post_install","none")
 set $CustomPostUninstall$ 	= getProductProperty("custom_post_uninstall","none")
@@ -153,6 +178,12 @@ set $Kill_Running$ 			= GetProductProperty("kill_running", "False")
 Set $RegPathUninstall64$ 	= "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
 Set $RegPathUninstall32$ 	= "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
 
+;-------------------------------------------------------
+; filter for opsiServiceCall productOnClient_getObjects:
+;-------------------------------------------------------
+set $ProductFilter$	= "*"+$StrippedProductId$
+set $ProductVersionFilter$ = "*"
+
 ;-----------------------------------------------------------
 ;*** specific settings
 ;-----------------------------------------------------------
@@ -172,7 +203,8 @@ Set $Installer$		  	= "%ScriptPath%\files\" + $StrippedProductId$ + "-{{O_SOFTWA
 Set $InstallDir$      	= $InstallBase$ + "\" + $StrippedProductId$ + "\"
 Set $MinimumSpace$    	= "35 MB"
 Set $CheckBin$       	= $StrippedProductId$ + ".exe"
-Set	$DefaultXML$		= $StrippedProductId$ + ".xml"
+Set $PathToExe$			= $InstallDir$ + $CheckBin$
+Set $DefaultXML$		= $InstallDir$ + $StrippedProductId$ + ".xml"
 
 Set $LogDir$			= "%SystemDrive%\tmp"
 Set $Inst_Log$			= $LogDir$ + "\"+$ProductId$+"_install.log"

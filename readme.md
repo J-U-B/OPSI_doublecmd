@@ -20,6 +20,7 @@
   * [Double Commander](#lic_doublecmd)
   * [psDetail](#lic_psdetail)
   * [GetRealName](lic_getrealname)
+  * [7Zip](lic_7zip)
 * [Anmerkungen/ToDo](#anmerkungen_todo)
 
 
@@ -87,10 +88,10 @@ ein alternatives Spec--File uebergeben werden:
 
 Das Paket kann mit *"batteries included"* erstellt werden. In dem Fall erfolgt 
 der Download der Software beim Erstellen des OPSI-Paketes und nicht erst bei
-dessen Installation:
+dessen Installation auf dem Depot-Server:
 > *<code>ALLINC=[true|false]</code>*
 
-Standard ist hier die Erstellung des leichtgewichtigen Paketes (```ALLINC=false```).
+Standard ist hier die Erstellung des vollstaendigen Paketes (```ALLINC=true```).
 
 Bei der Installation des Paketes im Depot wird ein eventuell vorhandenes 
 ```files```-Verzeichnis zunaechst gesichert und vom ```postinst```-Skript
@@ -122,9 +123,9 @@ sollen nur noch in <code>spec.json</code> angepasst werden. Den Rest uebernimmt 
 
 ## Installation ##
 
-Die Software selbst wird - sofern bei der Paketerstellung nicht anders vorgegeben - 
-<u>nicht</u> mit diesem Paket vertrieben. Fuer die *"batteries included"*-Pakete 
-entfaellt dieser Abschnitt.
+Die Software selbst wird in der **~dl**-Version (<code> ALLINC=false</code> bei <code>make</code>) 
+<u>nicht</u> mit diesem Paket vertrieben. Fuer die standardmaessig erstellten
+*"batteries included"*-Pakete entfaellt dieser Abschnitt.
 
 Je nach Art des erstellten Paketes erfolgt bei der Installation im Depot durch 
 das <code>postinst</code>-Script der Download der Software vom Hersteller (Windows, 32 und 64 Bit).  
@@ -144,13 +145,20 @@ verwendet, da letztere bislang keine Anpassung des Zielverzeichnisses erlauben.
 Die Installation der Software laesst sich ueber eine Reihe von Properties beeinflussen:
 
 * **<code>custom_default_config</code>** - Hier kann der Dateiname fuer eine
-Default-Konfiguration angegeben werden. Diese muss im Verzeichnis <code>custom</code>
-liegen und ueberschreibt die vom Installer angelegte Minimalkonfiguration
-(<code>doublecmd.xml</code>).
+Default-Konfiguration angegeben werden. Diese muss im Verzeichnis <code>config</code>
+oder <code>custom</code> liegen und ueberschreibt die vom Installer angelegte 
+Minimalkonfiguration (<code>doublecmd.xml</code>).  
+Konfigurationen im <code>custom</code>-Verzeichnis werden bei Namensgleichheit 
+bevorzugt behandelt und bei Aktualisierung des Paketes nicht ueberschrieben.
 * **<code>custom_post_install</code>** - Das hier angegebene OPSI-Script wird
 ins Setup eingebunden und im Anschluss an die Installation ausgefuehrt.
 * **<code>custom_post_uninstall</code>** - Das hier angegebene OPSI-Script wird
 in die Deinstallation eingebunden und im Anschluss ausgefuehrt.
+* **<code>default_language</code>** - Hier kann fuer die Applikation eine
+Voreinstellung fuer die Sprache gewaehlt werden. Diese kann vom Anwender spaeter
+individuell angepasst werden.  
+In der Voreinstellung wird versucht die Systemsprache zu verwenden. Darueber
+hinaus kann zwischen *de*, *en*, *fr*, *it*, *es* gewaehlt werden.
 * **<code>install_architecture</code>** - Hier kann zwischen der 32- und der
 64-Bit-Version der Software gewaehlt werden. Standardmaessig wird die zum 
 Betriebssystem passende Version gewaehlt.
@@ -172,7 +180,7 @@ Installation fehl.
 ### Aufbau des Paketes ###
 * **<code>variables.opsiinc</code>** - Da Variablen ueber die Scripte hinweg mehrfach
 verwendet werden, werden diese (bis auf wenige Ausnahmen) zusammengefasst hier deklariert.
-* **<code>product_variables.opsiinc</code>** - die producktspezifischen Variablen werden
+* **<code>product_variables.opsiinc</code>** - die produktspezifischen Variablen werden
 hier definiert
 * **<code>setup.opsiscript </code>** - Das Script fuer die Installation.
 * **<code>uninstall.opsiscript</code>** - Das Uninstall-Script
@@ -187,14 +195,18 @@ ob alle verwendeten Variablen deklariert sind bzw. nicht verwendete Variablen
 aufzuspueren.
 * **<code>bin/</code>** - Hilfprogramme; hier: **7zip**, **psdetail**, **GetRealName**.
 * **<code>images/</code>** - Programmbilder fuer OPSI
+* **<code>config/</code>** - Default-Konfigurationen zur Auswahl und Anpassung
+* **<code>custom/</code>** - optionale Konfigurationen und Custom-Scripte.  
+Die Daten dieses Verzeichnisses bleiben bei einer Paketaktualisierung erhalten.
 
 <div id="nomenklatur"></div>
 
 ### Nomenklatur ###
 Praefixes in der Produkt-Id definieren die Art des Paketes:
 
-* **0_** - Es handelt sich um ein Test-Paket. Beim Uebergang zur Produktions-Release
-wird der Praefix entfernt.
+* **0_** oder **test_**- Es handelt sich um ein Test-Paket. Beim Uebergang zur Produktions-Release
+wird der Praefix entfernt. (Achtung: Es auch moeglich Test-Pakete ohne expliziten
+Praefix zu erstellen.)
 * **o4i_** - Das Paket ist zur Verwendung im Opsi4Institutes-Repository vorgesehen.
 * **dfn_** - Das Paket ist zur Verwendung im DFN-Repository vorgesehen. (identisch mit o4i)
 
@@ -277,10 +289,17 @@ Es werden keine ex- oder impliziten Zusagen gemacht oder Garantien bezueglich
 der Eigenschaften, des Funktionsumfanges oder Fehlerfreiheit gegeben.  
 Alle Risiken des Softwareeinsatzes liegen beim Nutzer.
 
+<div id="lic_7zip"></div>
+
+### 7zip ###
+
+Es gilt die Lizenz von [http://www.7-zip.org/license.txt](http://www.7-zip.org/license.txt).  
+Die Lizenz liegt diesem Paket in <code>CLIENT_DATA/bin/</code> ebenfalls bei.
+
 <div id="anmerkungen_todo"></div>
 
 ## Anmerkungen/ToDo ##
-* Fuer die OPSI-Pakete wird noch ein ***Lizenzmodell*** benoetigt.
+...
 
 -----
-Jens Boettge <<boettge@mpi-halle.mpg.de>>, 2018-09-18 13:37:33 +0200
+Jens Boettge <<boettge@mpi-halle.mpg.de>>, 2019-07-08 14:30:55 +0200

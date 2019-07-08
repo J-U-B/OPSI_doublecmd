@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<doublecmd DCVersion="0.8.4 beta" ConfigVersion="10">
+<!-- Double Commander base config -->
+<!-- dark color scheme            -->
+<doublecmd ConfigVersion="10">
   <Configuration Save="True" SortOrder="0">
     <UseConfigInProgramDir>False</UseConfigInProgramDir>
   </Configuration>
@@ -308,5 +310,17 @@
       </Columns>
     </ColumnsSet>
   </ColumnsSets>
+  
+  <MainWindow>
+    <Position Save="True">
+      <Left>100</Left>
+      <Top>50</Top>
+      <Width>1000</Width>
+      <Height>600</Height>
+      <PixelsPerInch>96</PixelsPerInch>
+      <Maximized>False</Maximized>
+      <Splitter>50</Splitter>
+    </Position>
+  </MainWindow>
 
 </doublecmd>

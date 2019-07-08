@@ -1,6 +1,6 @@
 {{! ========================================================================== }}
 {{!  Double Commander CONTROL                                                  }}
-{{!  J. Boettge <boettge@mpi-halle.mpg.de> 2019-02-27 08:07:31 +0100           }}
+{{!  J. Boettge <boettge@mpi-halle.mpg.de> 2019-07-08 15:38:53 +0200           }}
 {{! ========================================================================== }}
 [Package]
 version: {{O_PKG_VER}}
@@ -11,13 +11,13 @@ incremental: False
 type: localboot
 id: {{TESTPREFIX}}{{ORGPREFIX}}doublecmd
 name: Double Commander
-description: Double Commander is a cross platform open source file manager with two panels side by side. It is inspired by Total Commander and features some new ideas.
- ___
- Homepage: https://sourceforge.net/projects/doublecmd/
- Changelog: {{O_SOFTWARE_CHANGES}}
+description: • Double Commander is a cross platform open source file manager with two panels side by side. It is inspired by Total Commander and features some new ideas.
+    • Der Double Commander ist ein OpenSource-Filemanager mit zwei nebeneinander liegenden Panels. Er ist inspiriert vom Total Commander und enthält einige neue Ideen.
 advice: Maintainer: Jens Boettge <boettge@mpi-halle.mpg.de>
- Organization: {{ORGNAME}}
- Release date: {{O_RELEASE_DATE}}
+    Organization: {{ORGNAME}}
+    Release date: {{O_RELEASE_DATE}}
+    Homepage: https://sourceforge.net/projects/doublecmd/
+    Changelog: {{O_SOFTWARE_CHANGES}}
 version: {{O_SOFTWARE_VER}}
 priority: 0
 licenseRequired: False
@@ -45,14 +45,14 @@ description: which architecture (32/64 bit) should be installed
 values: ["32 bit", "64 bit", "sysnative"]
 default: ["sysnative"]
 
-;[ProductProperty]
-;type: unicode
-;name: default_language
-;multivalue: False
-;editable: False
-;description: application default language (Currently unused! Set LANG variable for user instead.)
-;values: ["de_DE", "en_US"]
-;default: ["en_US"]
+[ProductProperty]
+type: unicode
+name: default_language
+multivalue: False
+editable: False
+description: application default language
+values: ["auto", "de", "en", "fr", "it", "es"]
+default: ["auto"]
 
 [ProductProperty]
 type: bool
@@ -83,9 +83,9 @@ type: unicode
 name: custom_default_config
 multivalue: False
 editable: True
-description: Define filename for default configuration (XML) in custom directory
-values: ["doublecmd.xml.default", "none"]
-default: ["none"]
+description: Define filename for default configuration (package templates or custom XML)
+values: ["doublecmd.light.xml", "doublecmd.dark.xml", "doublecmd.red.xml", "doublecmd.extended.xml", ""]
+default: ["doublecmd.light.xml"]
 
 [ProductProperty]
 type: unicode

@@ -2,7 +2,7 @@
 ; delsub.opsiinc DOUBLE COMMANDER
 ; Uninstaller type: INNO or MSI
 ;
-; J. Boettge <boettge@mpi-halle.mpg.de>  2018-09-18 09:07:29 +0200
+; J. Boettge <boettge@mpi-halle.mpg.de>  2019-07-08 08:03:05 +0200
 ;=====================================================================
 
 
@@ -44,6 +44,10 @@ if not ( count ($ResultList$) = "0" )
 			ShowBitmap $Img_Uninstall$ $ProductName$
 		endif
 	endif	
+	
+	;=== update productOnClient information on depot server
+	Message "Updating status information on depot"
+	set $result$ = removeProductVerOnClientStatus($ProductFilter$, $ProductVersionFilter$)
 	
 	;=== measure time
 	set $TimeDiff$ = getDiffTimeSec
@@ -132,7 +136,7 @@ sub_check_PathVar
 
 ;=== compare current Uninstaller with InstallDir from this package:
 if not (lower($Uninstaller$) = lower(stringReplace($UninstallString$,'"','')))
-	logWarning "Expected $UninstallString$ from registry does not match $Uninstaller$ from package:"
+	comment "INFO: Expected $UninstallString$ from registry does not match $Uninstaller$ from package:"
 	comment "   [" + $UninstallString$ + "] <> [" + $Uninstaller$ + "]"
 endif
 
@@ -153,7 +157,7 @@ endif
 if ($ExitCode$ = "0") and not ($Uninst_RegDir$ = "")
 	;=== does the installation directory still exist?
 		if (FileExists($Inst_Loc$))
-			logWarning "Install directory still exists: [" + $Inst_Loc$ + "]"
+			comment "INFO: Install directory still exists: [" + $Uninst_RegDir$ + "]. Trying to delete."
 			;=== try final cleanup
 			Files_del_InstallDir
 		endif

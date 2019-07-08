@@ -2,7 +2,7 @@
 ; setup.ins DOUBLE COMMANDER
 ; Installer type: INNO
 ; 
-; J. Boettge <boettge@mpi-halle.mpg.de>  2018-09-18 12:56:00 +0200
+; J. Boettge <boettge@mpi-halle.mpg.de>  2019-07-08 14:10:43 +0200
 ;======================================================================
 
 ;======================================================================
@@ -63,6 +63,9 @@ else
 		isFatalError
 	endif
 	
+	;=== (pre)configure application
+	ShowBitmap $Img_Config$ $ProductName$
+	
 	;=== create desktop link if requested
 	if ($pr_DesktopLink$ = "true")
 		LinkFolder_CreateDesktopLink
@@ -75,17 +78,78 @@ else
 	
 	;=== custom config
 	comment "Looking for custom default configuration"
-	if not ($CustomConfig$ = "none")
-		if FileExists("%ScriptPath%\custom\" + $CustomConfig$)
-			if FileExists($InstallDir$+$DefaultXML$) 
-				ShowBitmap $Img_Install_Custom$ $ProductName$
-				ShellInAnIcon_copy_default_config
-				ShowBitmap $Img_Install$ $ProductName$
+	if ($CustomConfig$ = "") OR ($CustomConfig$ = "none")
+		comment "No default configuration selected"
+	else
+		Set $ConfigXML$ = "%ScriptPath%\custom\" + $CustomConfig$
+		if FileExists($ConfigXML$)
+			comment "Using custom configuration template: " + $CustomConfig$
+		else
+			Set $ConfigXML$ = "%ScriptPath%\config\" + $CustomConfig$
+			if FileExists($ConfigXML$)
+				comment "Using package configuration template: " + $CustomConfig$
 			else
-				LogWarning "Can't find package default configuration: [" + $InstallDir$+$DefaultXML$ + "]"
+				logWarning("Selected configuration template does not exist! [" + $CustomConfig$ + "]"
 			endif
 		endif
-	endif	
+		
+		if FileExists($ConfigXML$)
+			ShellInAnIcon_copy_default_config
+			set $ExitCode$ = GetLastExitCode
+			if not($ExitCode$ = "0") OR not(FileExists($DefaultXML$))
+				logError "Error while copying default configuration template."
+			endif
+		endif
+	endif
+	
+	;===set default application language
+	comment "Set application language:"
+	if $sw_lang$ = "auto"
+		Switch $System_Language$
+			Case "0407"
+			;better:  Case "0407","0C07","0807" ...
+				comment "    detected language: German"
+				Set $LanguageCode$ = "de"
+			EndCase
+			Case "0409"
+			;better: Case "0x09","0C09","1009","0809" ...
+				comment "    detected language: English"
+				Set $LanguageCode$ = "en"
+			EndCase
+			Case "040c"
+				comment "    detected language: French"
+				Set $LanguageCode$ = "fr"
+			EndCase
+			Case "0410"
+				comment "    detected language: Italian"
+				Set $LanguageCode$ = "it"
+			EndCase
+			Case "2C0A"
+				comment "    detected language: Spanish"
+				Set $LanguageCode$ = "es"
+			EndCase									
+			DefaultCase
+				comment "    detected language code is " + $System_Language$ + "; using default (english)"
+				Set $LangSourceFile$ = "en"
+			EndCase
+		endif
+		EndSwitch
+	else
+		comment "    selected language by property: " + $sw_lang$
+		Set $LanguageCode$ = $sw_lang$
+	endif
+	if $LanguageCode$ = "en"
+		Set $LanguageFile$=$StrippedProductId$ + ".po"
+	else
+		Set $LanguageFile$=$StrippedProductId$ + "." + $LanguageCode$ + ".po"
+	endif
+	if FileExists($DefaultXML$)
+		Comment "Patching default config file to uses language file " + $LanguageFile$
+		XMLPatch_Defaultconfig_Lang $DefaultXML$
+	else
+		LogWarning "Default configuration file does not exist: " + $DefaultXML$
+	endif
+
 	
 	;=== custom post install
 	comment "include custom post install file"
@@ -113,8 +177,22 @@ $Installer$ $INNO_Inst_Opts$
 ;====================================================================== 
 [ShellInAnIcon_copy_default_config]
 ;======================================================================
-copy /Y "%ScriptPath%\custom\$CustomConfig$"  "$InstallDir$$DefaultXML$"
- 
+copy /Y "$ConfigXML$" "$DefaultXML$"
+exit %ERRORLEVEL%
+
+
+;======================================================================
+[XMLPatch_Defaultconfig_Lang]
+;======================================================================
+openNodeSet
+	documentroot
+	all_childelements_with:
+	 elementname: "Language"
+	all_childelements_with:
+	 elementname: "POFileName"	 
+end
+SetText "$LanguageFile$"
+
  
 ;=====================================================================
 [LinkFolder_clear_StartMenuLinks]

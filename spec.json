@@ -1,7 +1,7 @@
 {  
 	"_": "=== OPSI package variables ===",
-	"O_PKG_VER"         : "7",
-	"O_SOFTWARE_VER"    : "0.9.3",
+	"O_PKG_VER"         : "8",
+	"O_SOFTWARE_VER"    : "0.9.5",
 	"O_SOFTWARE"        : "doublecmd",
 	"O_SOFTWARE_CHANGES": "https://doublecmd.sourceforge.io/mantisbt/changelog_page.php?version_id=58",
 	"O_RELEASE_DATE"    : "{{M_TODAY}}",

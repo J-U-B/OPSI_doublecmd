@@ -1,8 +1,8 @@
 ############################################################
 # OPSI package Makefile (DOUBLE COMMANDER)
-# Version: 2.4.0
+# Version: 2.4.1
 # Jens Boettge <boettge@mpi-halle.mpg.de>
-# 2018-09-18 13:56:41 +0200
+# 2019-07-08 13:10:14 +0200
 ############################################################
 
 .PHONY: header clean mpimsp o4i dfn mpimsp_test o4i_test dfn_test all_test all_prod all help download
@@ -62,7 +62,7 @@ else
 endif
 
 ### build "batteries included' package?
-ALLINC ?= false
+ALLINC ?= true
 ALLINC_SEL := "[true] [false]"
 AFX := $(firstword $(ALLINC))
 AFY := $(shell echo $(AFX) | tr A-Z a-z)
@@ -282,7 +282,7 @@ copy_from_src:	build_dirs build_md5
 	@cp -upr $(SRC_DIR)/CLIENT_DATA/bin  $(BUILD_DIR)/CLIENT_DATA/
 	@cp -upr $(SRC_DIR)/CLIENT_DATA/*.opsiscript  $(BUILD_DIR)/CLIENT_DATA/
 	@cp -upr $(SRC_DIR)/CLIENT_DATA/*.opsiinc     $(BUILD_DIR)/CLIENT_DATA/
-	# @cp -upr $(SRC_DIR)/CLIENT_DATA/*.opsifunc    $(BUILD_DIR)/CLIENT_DATA/
+	@cp -upr $(SRC_DIR)/CLIENT_DATA/*.opsifunc    $(BUILD_DIR)/CLIENT_DATA/
 	@$(eval NUM_FILES := $(shell ls -l $(DL_DIR)/$(FILES_MASK) 2>/dev/null | wc -l))
 	@if [ "$(ALLINCLUSIVE)" = "true" ]; then \
 		echo "  * building batteries included package"; \
@@ -304,6 +304,7 @@ copy_from_src:	build_dirs build_md5
 		rm -rf $(BUILD_DIR)/CLIENT_DATA/files ; \
 	fi
 	@if [ -d "$(SRC_DIR)/CLIENT_DATA/custom" ]; then  cp -upr $(SRC_DIR)/CLIENT_DATA/custom     $(BUILD_DIR)/CLIENT_DATA/ ; fi
+	@if [ -d "$(SRC_DIR)/CLIENT_DATA/custom" ]; then  cp -upr $(SRC_DIR)/CLIENT_DATA/config     $(BUILD_DIR)/CLIENT_DATA/ ; fi
 	@if [ -d "$(SRC_DIR)/CLIENT_DATA/files" ];  then  cp -upr $(SRC_DIR)/CLIENT_DATA/files      $(BUILD_DIR)/CLIENT_DATA/ ; fi
 	@if [ -d "$(SRC_DIR)/CLIENT_DATA/images" ];  then  \
 		mkdir -p "$(BUILD_DIR)/CLIENT_DATA/images"; \

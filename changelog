@@ -1,3 +1,25 @@
+doublecmd 0.9.5-8:
+	* product update --> 0.9.5
+	* pystache: use UTF-8 encoding
+	* added: helpers.opsifunc
+	* helpers.opsifunc: added function currentProductSetReport
+	* deferring action if running instance is found (no success/error, keep action_request unchanged)
+	* update status information for other packages providing the same product on depot
+	* improved deployment of default configuration; added more templates
+	* set application default language via property
+	* variable $PathToExe$ is back
+	* added feature: local images (according to guideline)
+	* detect testing stage even if package has no matching prefix
+	* for distinction: explicit comment in logs for TESTING / RELEASE package	
+	* warning on unexpected previous install directory is now comment
+	* Makefile: new default for ALLINC is true
+	* control: adjusted description in control (en/de)
+	* control: URLs moved from description to advice
+	* documentation updated
+	* new icon for application configuration
+	* updated 7z binaries
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2019-07-08 14:10:49 +0200
+
 doublecmd 0.9.3-7:
 	* product update --> 0.9.3
 	* changed ORGNAME in Makefile/control for dfn_ packages to O4I
