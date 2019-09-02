@@ -1,3 +1,7 @@
+doublecmd 0.9.6-8:
+	* product update --> 0.9.6
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2019-09-02 07:10:07 +0200
+
 doublecmd 0.9.5-8:
 	* product update --> 0.9.5
 	* pystache: use UTF-8 encoding
