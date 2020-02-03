@@ -1,3 +1,9 @@
+doublecmd 0.9.8-9:
+	* product update --> 0.9.8
+	* product_downloader: modified detection of curl/wget
+	* Makefile: handling of default values made more comfortable
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2020-02-03 07:21:48 +0100
+
 doublecmd 0.9.7-8:
 	* product update --> 0.9.7
 	-- J. Boettge <boettge@mpi-halle.mpg.de>  2020-01-09 07:15:47 +0100
