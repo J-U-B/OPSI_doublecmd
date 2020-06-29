@@ -1,3 +1,7 @@
+doublecmd 0.9.9-9:
+	* product update --> 0.9.9
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2020-06-29 21:24:30 +0200
+
 doublecmd 0.9.8-9:
 	* product update --> 0.9.8
 	* product_downloader: modified detection of curl/wget

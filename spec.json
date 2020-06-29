@@ -1,9 +1,9 @@
 {  
 	"_": "=== OPSI package variables ===",
 	"O_PKG_VER"         : "9",
-	"O_SOFTWARE_VER"    : "0.9.8",
+	"O_SOFTWARE_VER"    : "0.9.9",
 	"O_SOFTWARE"        : "doublecmd",
-	"O_SOFTWARE_CHANGES": "https://doublecmd.sourceforge.io/mantisbt/changelog_page.php?version_id=63",
+	"O_SOFTWARE_CHANGES": "https://doublecmd.sourceforge.io/mantisbt/changelog_page.php?version_id=64",
 	"O_RELEASE_DATE"    : "{{M_TODAY}}",
 	"O_INST_LOG"        : "/tmp/{{M_ORGPREFIX}}doublecmd__opsi_package_install.log",
 	
