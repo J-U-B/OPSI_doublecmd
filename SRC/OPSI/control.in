@@ -1,6 +1,6 @@
 {{! ========================================================================== }}
 {{!  Double Commander CONTROL                                                  }}
-{{!  J. Boettge <boettge@mpi-halle.mpg.de> 2019-07-08 15:38:53 +0200           }}
+{{!  J. Boettge <boettge@mpi-halle.mpg.de> 2020-11-27 21:59:47 +0100           }}
 {{! ========================================================================== }}
 [Package]
 version: {{O_PKG_VER}}
@@ -13,11 +13,13 @@ id: {{TESTPREFIX}}{{ORGPREFIX}}doublecmd
 name: Double Commander
 description: • Double Commander is a cross platform open source file manager with two panels side by side. It is inspired by Total Commander and features some new ideas.
     • Der Double Commander ist ein OpenSource-Filemanager mit zwei nebeneinander liegenden Panels. Er ist inspiriert vom Total Commander und enthält einige neue Ideen.
-advice: Maintainer: Jens Boettge <boettge@mpi-halle.mpg.de>
+    ___
+    Maintainer: Jens Boettge <boettge@mpi-halle.mpg.de>
     Organization: {{ORGNAME}}
     Release date: {{O_RELEASE_DATE}}
     Homepage: https://sourceforge.net/projects/doublecmd/
     Changelog: {{O_SOFTWARE_CHANGES}}
+advice:
 version: {{O_SOFTWARE_VER}}
 priority: 0
 licenseRequired: False
