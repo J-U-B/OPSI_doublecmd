@@ -1,3 +1,7 @@
+doublecmd 0.9.10-10:
+	* product update --> 0.9.10
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2021-01-11 14:12:58 +0100
+
 doublecmd 0.9.9-10:
 	* compatibility with opsi-winst 4.12.3.16 and above ensured: cmd64 replaced
 	* adjusted control
