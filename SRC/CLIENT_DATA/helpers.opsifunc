@@ -3,15 +3,27 @@
 ; 
 ; Some general helper functions...
 ;
-; Version: 	v1.4
+; Version: 	v1.7.1
 ; Author : 	J. Boettge <boettge@mpi-halle.mpg.de>
-; Date   :	2019-07-08 13:34:08 +0200
+; Date   :	2021-07-19 09:28:13 +0200
 ;==========================================================================
 ; Changelog
 ; ---------
+; v1.7.1
+; * fixed syntax opsiServiceCalls
+
+; v1.7
+; * added function clearProductOnClientStatus
+;
+; v1.6
+; * added function productExtUpdateOnClient
+;
+; v1.5
+; * fixed valid actions for productSetActionRequest
+;
 ; v1.4
 ; * added function currentProductSetReport
-
+;
 ; v1.3
 ; * added function productVerGetOnClient
 ; * added function removeProductVerOnClientStatus
@@ -223,7 +235,7 @@ DefFunc productSetActionRequest(val $prodId$:string, val $actRequest$: string) :
 	DefStringList $outStream$
 	DefVar $ValidActions$
 	set $actRequest$ = lower($actRequest$)
-	set $ValidActions$ = "||setup|update|uninstall|always|once|always|custom|"
+	set $ValidActions$ = "|setup|update|uninstall|always|once|always|custom|none|"
 	if contains($ValidActions$, "|"+$actRequest$+"|")
 		set $outStream$ = getReturnListFromSection("opsiServiceCall_setActionRequest")
 		set $result$ = takeString("0", $outStream$)
@@ -247,8 +259,8 @@ DefFunc productSetActionRequest(val $prodId$:string, val $actRequest$: string) :
 ;.................................................
 "method": "setProductActionRequest"
 "params": [ 
-"$prodId$"
-"%opsiserviceUser%"
+"$prodId$",
+"%opsiserviceUser%",
 "$actRequest$"
 ]	
 ;.................................................
@@ -259,7 +271,7 @@ EndFunc
 DefFunc currentProductSetReport(val $Report$: string) : string
 ;-------------------------------------------------------------------------
 ; set report string for current product
-; valid values for $Report$: 
+; valid values for $Report$:
 ; Return value:
 ;		* empty string in case of no error
 ;		* error message (result of opsiServiceCall) in any other case
@@ -276,26 +288,26 @@ DefFunc currentProductSetReport(val $Report$: string) : string
 	set $result$ = takeString("0", $outStream$)
 	if ($result$='[]')
 		set $result$ = ''
-	endif	
+	endif
 	if strPos($result$,'-> ') INT> "0"
 		set $result$ = strPart($result$, "4", strLength($result$))
-	endif	
+	endif
 	if jsonIsObject($result$)
 		set $result$ = jsonAsObjectGetValueByKey($result$, "message")
 	endif
 	setLogLevel=$logLvl$
-	
+
 ;.................................................
 [opsiServiceCall_setActionProgress]
 ;.................................................
 "method": "setProductActionProgress"
-"params": [ 
-"$prodId$"
-"%opsiserviceUser%"
+"params": [
+"$prodId$",
+"%opsiserviceUser%",
 "$Report$"
-]	
+]
 ;.................................................
-EndFunc	
+EndFunc
 
 
 ;-------------------------------------------------------------------------
@@ -319,7 +331,7 @@ DefFunc productGetOnClient(val $product$:string) : string
 '{"clientId":"%opsiserviceUser%","productType":"LocalbootProduct","productId":"$product$"}'
 ]
 ;.................................................
-EndFunc	
+EndFunc
 
 
 ;-------------------------------------------------------------------------
@@ -334,7 +346,7 @@ DefFunc productVerGetOnClient(val $product$:string, val $pVersion$:string) : str
 	DefStringList $outStream$
 	set $outStream$ = getReturnListFromSection("opsiServiceCall_get_productOnClient")
 	set $result$ = takeString("0", $outStream$)
-	
+
 ;.................................................
 [opsiServiceCall_get_productOnClient]
 ;.................................................
@@ -344,7 +356,7 @@ DefFunc productVerGetOnClient(val $product$:string, val $pVersion$:string) : str
 '{"clientId":"%opsiserviceUser%","productType":"LocalbootProduct","productId":"$product$", "productVersion":"$pVersion$"}'
 ]
 ;.................................................
-EndFunc	
+EndFunc
 
 
 ;-------------------------------------------------------------------------
@@ -353,7 +365,7 @@ DefFunc productUpdateOnClient(val $product$:string, val $tgtConfig$:string, val 
 ; Update object of the given product for this client.
 ; If $tgtConfig$ or $instStatus$ is 'x', the corrsponding
 ; value in the object will not be changed.
-; 
+;
 ; Return value:
 ;		* empty string in case of no error
 ;		* error message (result of opsiServiceCall) in any other case
@@ -413,13 +425,84 @@ DefFunc productUpdateOnClient(val $product$:string, val $tgtConfig$:string, val 
 '$prodJSON$'
 ]
 ;.................................................
-EndFunc	
+EndFunc
+;--- ...productUpdateOnClient --------------------------------------------
+
+
+;-------------------------------------------------------------------------
+DefFunc productExtUpdateOnClient(val $product$:string, val $tgtConfig$:string, val $instStatus$:string, val $actionResult$: string, val $actionProgress$: string) : string
+;-------------------------------------------------------------------------
+; Update object of the given product for this client (extended).
+; If $tgtConfig$ or $instStatus$ is 'x', the corrsponding
+; value in the object will not be changed.
+;
+; Return value:
+;		* empty string in case of no error
+;		* error message (result of opsiServiceCall) in any other case
+;-------------------------------------------------------------------------
+	DefVar $logLvl$
+	set $logLvl$=getLoglevel
+	setLogLevel=7
+
+	DefStringList $outStream$
+	DefVar $prodJSON$
+	set $prodJSON$ = '{"ident" : "' + $product$ + ';LocalbootProduct;%opsiserviceUser%", "type":"ProductOnClient", "lastAction":"", "actionResult":"' + $actionResult$ + '", "actionProgress":"'+ $actionProgress$ + '"}}'
+
+	if ($tgtConfig$ = '') AND ($instStatus$ = '')
+		; *** nothing to do
+		set $result$ = ""
+	else
+		if not ($tgtConfig$ = '')
+			if ($tgtConfig$ = 'not_installed')
+				set $prodJSON$ = jsonAsObjectSetStringtypeValueByKey($prodJSON$,"targetConfiguration", "")
+			else
+				set $prodJSON$ = jsonAsObjectSetStringtypeValueByKey($prodJSON$,"targetConfiguration", $tgtConfig$)
+			endif
+		endif
+		if not ($instStatus$ = '')
+			if ($instStatus$ = 'undefined')
+				set $prodJSON$ = jsonAsObjectSetStringtypeValueByKey($prodJSON$,"installationStatus", "")
+			else
+				set $prodJSON$ = jsonAsObjectSetStringtypeValueByKey($prodJSON$,"installationStatus", $instStatus$)
+			endif
+		endif
+
+		if ($prodJSON$ = '')
+			set $result$ = "productUpdateOnClient: Failed to build JSON object"
+			logError $result$
+		else
+			set $outStream$ = getReturnListFromSection("opsiServiceCall_update_productOnClient")
+			set $result$ = takeString("0", $outStream$)
+			if ($result$='[]')
+				set $result$ = ''
+			endif
+			if strPos($result$,'-> ') INT> "0"
+				set $result$ = strPart($result$, "4", strLength($result$))
+			endif
+			if jsonIsObject($result$)
+				set $result$ = jsonAsObjectGetValueByKey($result$, "message")
+			endif
+
+		endif
+	endif
+	setLogLevel=$logLvl$
+
+;.................................................
+[opsiServiceCall_update_productOnClient]
+;.................................................
+"method": "productOnClient_updateObjects"
+"params": [
+'$prodJSON$'
+]
+;.................................................
+EndFunc
+;--- ...productExtUpdateOnClient -----------------------------------------
 
 
 ;-------------------------------------------------------------------------
 DefFunc removeProductOnClientStatus(val $productFilter$:string) : string
 ;-------------------------------------------------------------------------
-; Set product status of products on depot server , defined by 
+; Set product status of products on depot server , defined by
 ; $productFilter$ to:
 ; * targetConfiguration = forbidden
 ; * installationStatus  = not_installed
@@ -451,7 +534,7 @@ DefFunc removeProductOnClientStatus(val $productFilter$:string) : string
 		endif		
 	endif
 	setLogLevel=$logLvl$
-	
+
 ;----------------------------------------------------------
 [sub_process_depot_info]
 ;----------------------------------------------------------
@@ -487,8 +570,8 @@ EndFunc
 ;-------------------------------------------------------------------------
 DefFunc removeProductVerOnClientStatus(val $productFilter$:string, val $pVersion$:string) : string
 ;-------------------------------------------------------------------------
-; Set product status of products on depot server , defined by 
-; $productFilter$ to:
+; Set product status of products on depot server , defined by
+; $productFilter$ and $pVersion$ to:
 ; * targetConfiguration = forbidden
 ; * installationStatus  = not_installed
 ;-------------------------------------------------------------------------
@@ -501,22 +584,22 @@ DefFunc removeProductVerOnClientStatus(val $productFilter$:string, val $pVersion
 	DefVar $p_prodId$
 	DefVar $p_actProgess$
 	DefVar $thisProductId$
-	
+
 	DefVar $logLvl$
 	set $logLvl$=getLoglevel
-	setLogLevel=7	
-	
+	setLogLevel=7
+
 	set $thisProductId$   = getValue("id", getProductMap)
-	
+
 	set $productArray$ = productVerGetOnClient($productFilter$, $pVersion$)
 	if jsonIsArray($productArray$)
 		set $count$ = jsonAsArrayCountElements($productArray$)
 		comment "Found products for [" + $productFilter$ +"]: " + $count$
-		
+
 		if ($count$ INT> "0")
 			for %prod_idx% = "0" to calculate($count$ + "-1")  do sub_process_depot_info
-		
-		endif		
+
+		endif
 	endif
 	setLogLevel=$logLvl$
 
@@ -544,10 +627,92 @@ if not ($p_prodId$ = $thisProductId$)
 			comment "* installationStatus  = " + $p_instStatus$
 			comment "* targetConfiguration = " + $p_tgtConfig$
 		endif
-	endif	
+	endif
 else
 	comment "skipping processing for actual produtId: " + $thisProductId$
 endif
 ;-------------------------------------------------------------------------
 EndFunc
 ;--- ...removeProductOnClientStatus --------------------------------------
+
+
+;-------------------------------------------------------------------------
+DefFunc clearProductVerOnClientStatus(val $productFilter$:string, val $pVersion$:string, val $pTgtConfig$:string, val $pInstStatus$:string) : string
+;-------------------------------------------------------------------------
+; Set product status of products on depot server , defined by
+; $productFilter$ and $pVersion$ to:
+; * targetConfiguration = $pTgtConfig$ (or 'forbidden' if empty)
+; * installationStatus  = $pInstStatus$ (or 'not_installed' if empty)
+;-------------------------------------------------------------------------
+	DefVar $productArray$
+	DefVar $productCheck$
+	DefVar $count$
+	DefVar $object$
+	DefVar $p_instStatus$
+	DefVar $p_tgtConfig$
+	DefVar $p_prodId$
+	DefVar $p_actProgess$
+	DefVar $thisProductId$
+	DefVar $instStatus$
+	DefVar $tgtConfig$
+
+	DefVar $logLvl$
+	set $logLvl$=getLoglevel
+	setLogLevel=7
+	
+	if ($pTgtConfig$ = "")
+		set $tgtConfig$ = 'forbidden'
+	else
+		set $tgtConfig$ = $pTgtConfig$
+	endif
+	if ($pInstStatus$ = "")
+		set $instStatus$ = "not installed"
+	else
+		set $instStatus$ = $pInstStatus$
+	endif
+
+	set $thisProductId$   = getValue("id", getProductMap)
+
+	set $productArray$ = productVerGetOnClient($productFilter$, $pVersion$)
+	if jsonIsArray($productArray$)
+		set $count$ = jsonAsArrayCountElements($productArray$)
+		comment "Found products for [" + $productFilter$ +"]: " + $count$
+
+		if ($count$ INT> "0")
+			for %prod_idx% = "0" to calculate($count$ + "-1")  do sub_process_depot_info
+
+		endif
+	endif
+	setLogLevel=$logLvl$
+
+
+;----------------------------------------------------------
+[sub_process_depot_info]
+;----------------------------------------------------------
+set $object$ = jsonAsArrayGetElementByIndex($productArray$, "%prod_idx%")
+comment "processing item [%prod_idx%] ===> " + $object$
+set $p_prodId$         = jsonAsObjectGetValueByKey($object$, "productId")
+if not ($p_prodId$ = $thisProductId$)
+	set $p_instStatus$ = jsonAsObjectGetValueByKey($object$, "installationStatus")
+	set $p_tgtConfig$  = jsonAsObjectGetValueByKey($object$, "targetConfiguration")
+
+	if ($p_instStatus$ = "installed") OR ($p_tgtConfig$ = "installed")
+		set $result$ = productUpdateOnClient($p_prodId$, $tgtConfig$, $instStatus$)
+		if not ($result$ = "")
+			logError $result$
+		else
+			set $productCheck$ = productGetOnClient($p_prodId$)
+			set $p_instStatus$ = jsonAsObjectGetValueByKey(jsonAsArrayGetElementByIndex($productCheck$,"0"), "installationStatus")
+			set $p_tgtConfig$  = jsonAsObjectGetValueByKey(jsonAsArrayGetElementByIndex($productCheck$,"0"), "targetConfiguration")
+			set $p_actProgess$ = jsonAsObjectGetValueByKey(jsonAsArrayGetElementByIndex($productCheck$,"0"), "actionProgress")
+			comment "new values for " + $p_prodId$
+			comment "* installationStatus  = " + $p_instStatus$
+			comment "* targetConfiguration = " + $p_tgtConfig$
+		endif
+	endif
+else
+	comment "skipping processing for actual produtId: " + $thisProductId$
+endif
+;-------------------------------------------------------------------------
+EndFunc
+;--- ...clearProductOnClientStatus --------------------------------------

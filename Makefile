@@ -1,8 +1,8 @@
 ############################################################
 # OPSI package Makefile (DOUBLE COMMANDER)
-# Version: 2.4.2
+# Version: 2.5.0
 # Jens Boettge <boettge@mpi-halle.mpg.de>
-# 2020-02-03 07:18:51 +0100
+# 2021-12-06 16:13:55 +0100
 ############################################################
 
 .PHONY: header clean mpimsp o4i dfn mpimsp_test o4i_test dfn_test all_test all_prod all help download
@@ -13,6 +13,11 @@ DEFAULT_SPEC = spec.json
 DEFAULT_ALLINC = true
 DEFAULT_KEEPFILES = false
 DEFAULT_ARCHIVEFORMAT = cpio
+
+### to keep the changelog inside the control set CHANGELOG_TGT to an empty string
+### otherwise the given filename will be used:
+CHANGELOG_TGT = changelog.txt
+#CHANGELOG_TGT =
 
 PWD = ${CURDIR}
 BUILD_DIR = BUILD
@@ -139,11 +144,6 @@ header:
 	@echo "                      Building OPSI package(s)"
 	@echo "=================================================================="
 
-fix_rights: header
-	@echo "---------- setting rights for PACKAGES folder --------------------"
-	chgrp -R opsiadmin $(PACKAGE_DIR)
-	chmod g+rx $(PACKAGE_DIR)
-	chmod g+r $(PACKAGE_DIR)/*
 
 mpimsp: header
 	@echo "---------- building MPIMSP package -------------------------------"
@@ -167,6 +167,7 @@ dfn: header
 			ORGNAME="O4I"    			\
 			ORGPREFIX="dfn_" 			\
 			STAGE="release"  			\
+			LEGACY="true"               \
 	build
 
 mpimsp_test: header
@@ -207,6 +208,7 @@ dfn_test: header
 			ORGNAME="O4I"    			\
 			ORGPREFIX="dfn_" 			\
 			STAGE="testing"  			\
+			LEGACY="true"               \
 	build
 
 dfn_test_0: header
@@ -215,6 +217,7 @@ dfn_test_0: header
 			ORGNAME="O4I"    			\
 			ORGPREFIX="dfn_" 			\
 			STAGE="testing"  			\
+			LEGACY="true"               \
 	build
 
 dfn_test_noprefix: header
@@ -223,22 +226,10 @@ dfn_test_noprefix: header
 			ORGNAME="O4I"    			\
 			ORGPREFIX="dfn_" 			\
 			STAGE="testing"  			\
+			LEGACY="true"               \
 	build
 
-clean_packages: header
-	@echo "---------- cleaning packages, checksums and zsync ----------------"
-	@rm -f $(PACKAGE_DIR)/*.md5 $(PACKAGE_DIR)/*.opsi $(PACKAGE_DIR)/*.zsync
-	
-clean: header
-	@echo "---------- cleaning  build directory & downloader-----------------"
-	@rm -rf $(BUILD_DIR)	
-	@rm -f product_downloader.sh
-	
-	
-realclean: header clean
-	@echo "---------- cleaning download directory ---------------------------"
-	@rm -rf $(DL_DIR)
-		
+
 help: header
 	@echo "Valid targets: "
 	@echo "	mpimsp"
@@ -267,19 +258,71 @@ help: header
 	@echo "	ARCHIVE_FORMAT=[cpio|tar]       (default: $(DEFAULT_ARCHIVEFORMAT))"
 	@echo ""
 
+clean_packages: header
+	@echo "---------- cleaning packages, checksums and zsync ----------------"
+	@rm -f $(PACKAGE_DIR)/*.md5 $(PACKAGE_DIR)/*.opsi $(PACKAGE_DIR)/*.zsync
+	
+clean: header
+	@echo "---------- cleaning  build directory & downloader-----------------"
+	@rm -rf $(BUILD_DIR)	
+	@rm -f product_downloader.sh
+	
+	
+realclean: header clean
+	@echo "---------- cleaning download directory ---------------------------"
+	@rm -rf $(DL_DIR)
+
+fix_rights: header
+	@echo "---------- setting rights for PACKAGES folder --------------------"
+	chgrp -R opsiadmin $(PACKAGE_DIR)
+	chmod g+rx $(PACKAGE_DIR)
+	chmod g+r $(PACKAGE_DIR)/*	
+
+pdf:
+	@# requirements for ths script (under Debian/Ubuntu):
+	@#    pandoc
+	@#    texlive-xetex
+	@#    texlive-latex-base
+	@#    texlive-fonts-recommended
+	@#    texlive-latex-recommended
+	@if [ -f "readme.md" ]; then \
+		if [ ! -e readme.pdf -o readme.pdf -ot readme.md ]; then \
+			echo "* Converting readme.md to readme.pdf"; \
+			cat readme.md | sed -re 's/^.*<!-- \b(START|END)\b PANDOC_PDF .*$$//' \
+			              | sed -re 's/^(<!-- START GIT_MARKDOWN .*-->)/\1<!--/'  \
+			              | sed -re 's/^(<!-- END GIT_MARKDOWN .*-->)/-->\1/'     \
+			              > $(BUILD_DIR)/readme_tmp.md && \
+			pandoc "$(BUILD_DIR)/readme_tmp.md" \
+				--pdf-engine=xelatex \
+				-f markdown \
+				-H SRC/DOCU/readme.sty \
+				-V linkcolor:blue \
+				-V geometry:a4paper \
+				-V geometry:margin=30mm \
+				-V mainfont="DejaVu Serif" \
+				-V monofont="DejaVu Sans Mono" \
+				-o "readme.pdf"; \
+			rm -f $(BUILD_DIR)/readme_tmp.md; \
+		else \
+			echo "* readme.pdf seems to be up to date"; \
+		fi \
+	else \
+		echo "* Error: readme.md is missing!"; \
+	fi
+
 build_dirs:
 	@echo "* Creating/checking directories"
 	@if [ ! -d "$(BUILD_DIR)" ]; then mkdir -p "$(BUILD_DIR)"; fi
 	@if [ ! -d "$(BUILD_DIR)/OPSI" ]; then mkdir -p "$(BUILD_DIR)/OPSI"; fi
 	@if [ ! -d "$(BUILD_DIR)/CLIENT_DATA" ]; then mkdir -p "$(BUILD_DIR)/CLIENT_DATA"; fi
 	@if [ ! -d "$(PACKAGE_DIR)" ]; then mkdir -p "$(PACKAGE_DIR)"; fi
+
 build_md5:
 	@echo "* Creating md5sum file for installation archives ($(MD5SUM_FILE))"
 	if [ -f "$(BUILD_DIR)/CLIENT_DATA/$(MD5SUM_FILE)" ]; then \
 		rm -f $(BUILD_DIR)/CLIENT_DATA/$(MD5SUM_FILE); \
 	fi
 	@grep -i "$(SW_NAME).$(SW_VER)." $(DL_DIR)/$(MD5SUM_FILE)>> $(BUILD_DIR)/CLIENT_DATA/$(MD5SUM_FILE) 
-	
 
 copy_from_src:	build_dirs build_md5
 	@echo "* Copying files"
@@ -289,6 +332,10 @@ copy_from_src:	build_dirs build_md5
 	@cp -upr $(SRC_DIR)/CLIENT_DATA/*.opsiscript  $(BUILD_DIR)/CLIENT_DATA/
 	@cp -upr $(SRC_DIR)/CLIENT_DATA/*.opsiinc     $(BUILD_DIR)/CLIENT_DATA/
 	@cp -upr $(SRC_DIR)/CLIENT_DATA/*.opsifunc    $(BUILD_DIR)/CLIENT_DATA/
+	
+	@if [ -f  "readme.pdf" ] ; then cp -upL readme.pdf   $(BUILD_DIR)/CLIENT_DATA/; fi
+	@if [ -f  "changelog" ]  ; then cp -upL changelog    $(BUILD_DIR)/CLIENT_DATA/changelog.txt; fi	
+	
 	@$(eval NUM_FILES := $(shell ls -l $(DL_DIR)/$(FILES_MASK) 2>/dev/null | wc -l))
 	@if [ "$(ALLINCLUSIVE)" = "true" ]; then \
 		echo "  * building batteries included package"; \
@@ -324,6 +371,8 @@ build_json:
 	@if [ ! -f "$(SPEC)" ]; then echo "*Error* spec file not found: \"$(SPEC)\""; exit 1; fi
 	@if [ ! -d "$(BUILD_DIR)" ]; then mkdir -p "$(BUILD_DIR)"; fi
 	@$(if $(filter $(STAGE),testing), $(eval TESTING :="true"), $(eval TESTING := "false"))
+	@$(if $(filter $(ORGPREFIX),dfn_), $(eval LEGACY :="true"), $(eval LEGACY := "false"))
+	@echo "* Legacy build: $(LEGACY)"	
 	@echo "* Creating $(BUILD_JSON)"
 	@rm -f $(BUILD_JSON)
 	$(PYSTACHE) $(SPEC)   "{ \"M_TODAY\"      : \"$(TODAY)\",         \
@@ -332,6 +381,7 @@ build_json:
 	                         \"M_ORGPREFIX\"  : \"$(ORGPREFIX)\",     \
 	                         \"M_TESTPREFIX\" : \"$(TESTPREFIX)\",    \
 	                         \"M_ALLINC\"     : \"$(ALLINCLUSIVE)\",  \
+	                         \"M_LEGACY\"     : \"$(LEGACY)\",        \
 	                         \"M_KEEPFILES\"  : \"$(KEEPFILES)\",     \
 	                         \"M_TESTING\"    : \"$(TESTING)\"        }" > $(BUILD_JSON)
 
@@ -346,7 +396,7 @@ download: build_json
 	fi
 	
 	
-build: download clean copy_from_src
+build: download pdf clean copy_from_src
 	@make build_json
 	
 	for F in $(FILES_OPSI_IN); do \
@@ -354,9 +404,23 @@ build: download clean copy_from_src
 		rm -f $(BUILD_DIR)/OPSI/$$F; \
 		${PYSTACHE} $(SRC_DIR)/OPSI/$$F.in $(BUILD_JSON) > $(BUILD_DIR)/OPSI/$$F; \
 	done	
+
+	for E in txt md pdf; do \
+		if [ -e readme.$$E ]; then \
+			echo "Copying additional file: readme.$$E"; \
+			cp -f readme.$$E $(BUILD_DIR)/OPSI/; \
+		fi; \
+	done
 	
 	if [ -e $(BUILD_DIR)/OPSI/control -a -e changelog ]; then \
-		cat changelog >> $(BUILD_DIR)/OPSI/control; \
+		if [ -n "$(CHANGELOG_TGT)" ]; then \
+			echo "* Using separate CHANGELOG file."; \
+			echo "The logs were moved to $(CHANGELOG_TGT)" >> $(BUILD_DIR)/OPSI/control; \
+			cp -f changelog $(BUILD_DIR)/OPSI/$(CHANGELOG_TGT); \
+		else \
+			echo "* Including changelogs in CONTROL file."; \
+			cat changelog >> $(BUILD_DIR)/OPSI/control; \
+		fi; \
 	fi
 	
 	for F in $(FILES_IN); do \
@@ -380,8 +444,8 @@ build: download clean copy_from_src
 	cd $(CURDIR)
 
 
-all_test:  header mpimsp_test dfn_test
+all_test:  header mpimsp_test o4i_test
 
-all_prod : header mpimsp dfn
+all_prod : header mpimsp o4i dfn
 
-all : header mpimsp dfn mpimsp_test dfn_test
+all : header mpimsp o4i dfn mpimsp_test o4i_test dfn_test

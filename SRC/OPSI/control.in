@@ -19,7 +19,13 @@ description: • Double Commander is a cross platform open source file manager w
     Release date: {{O_RELEASE_DATE}}
     Homepage: https://sourceforge.net/projects/doublecmd/
     Changelog: {{O_SOFTWARE_CHANGES}}
+{{^ifdef_legacy}}
 advice:
+{{/ifdef_legacy}}
+{{#ifdef_legacy}}
+advice: Important note: This package is DEPRECATED! Use o4i_{{O_SOFTWARE}} instead!
+ (There is no need to set this package to uninstall. This will be done automatically.)
+{{/ifdef_legacy}}
 version: {{O_SOFTWARE_VER}}
 priority: 0
 licenseRequired: False

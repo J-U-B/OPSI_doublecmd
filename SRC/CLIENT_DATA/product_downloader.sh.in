@@ -3,8 +3,8 @@
 # Download files from vendor
 # Product: Double Commander
 #
-# Version 1.4
-# Jens Boettge <boettge@mpi-halle.mpg.de>  2020-02-03 07:21:40 +0100
+# Version 1.5
+# Jens Boettge <boettge@mpi-halle.mpg.de>  2021-12-06 15:48:16 +0100
 #=======================================================================
 # link examples:
 # https://sourceforge.net/p/doublecmd/wiki/Download/
@@ -12,6 +12,10 @@
 # 	http://sourceforge.net/projects/doublecmd/files/DC%20for%20Windows%2064%20bit/Double%20Commander%200.8.4%20beta/doublecmd-0.8.4.x86_64-win64.exe/download
 # 	http://sourceforge.net/projects/doublecmd/files/DC%20for%20Windows%2032%20bit/Double%20Commander%200.8.4%20beta/doublecmd-0.8.4.i386-win32.msi/download
 # 	http://sourceforge.net/projects/doublecmd/files/DC%20for%20Windows%2064%20bit/Double%20Commander%200.8.4%20beta/doublecmd-0.8.4.x86_64-win64.msi/download
+#   https://github.com/doublecmd/doublecmd/releases/download/v1.0.1/doublecmd-1.0.1.x86_64-win64.exe
+#   https://github.com/doublecmd/doublecmd/releases/download/v1.0.1/doublecmd-1.0.1.x86_64-win64.msi
+#   https://github.com/doublecmd/doublecmd/releases/download/v1.0.1/doublecmd-1.0.1.i386-win32.exe
+#   https://github.com/doublecmd/doublecmd/releases/download/v1.0.1/doublecmd-1.0.1.i386-win32.msi
 #=======================================================================
 
 ERR=0
@@ -98,6 +102,7 @@ fi
 #fi
 
 BASE="https://sourceforge.net/projects/doublecmd/files/DC\ for\ Windows\ %%ARCH%%\ bit/Double\ Commander\ ${VERSION}\ beta/doublecmd-${VERSION}.%%WARCH%%.exe/download"
+BASE="https://github.com/doublecmd/doublecmd/releases/download/v${VERSION}/doublecmd-${VERSION}.%%WARCH%%.exe"
 PKG_FILE="${PROD}-${VERSION}-x%%ARCH%%.exe"
 
 # in postinst: DEST_DIR=DST="${CLIENT_DATA_DIR}/files"

@@ -1,9 +1,9 @@
 {  
 	"_": "=== OPSI package variables ===",
-	"O_PKG_VER"         : "10",
-	"O_SOFTWARE_VER"    : "0.9.10",
+	"O_PKG_VER"         : "11",
+	"O_SOFTWARE_VER"    : "1.0.1",
 	"O_SOFTWARE"        : "doublecmd",
-	"O_SOFTWARE_CHANGES": "https://doublecmd.sourceforge.io/mantisbt/changelog_page.php?version_id=65",
+	"O_SOFTWARE_CHANGES": "https://github.com/doublecmd/doublecmd/milestone/1?closed=1",
 	"O_RELEASE_DATE"    : "{{M_TODAY}}",
 	"O_INST_LOG"        : "/tmp/{{M_ORGPREFIX}}doublecmd__opsi_package_install.log",
 	
@@ -13,11 +13,13 @@
 	"ORGNAME"           : "{{M_ORGNAME}}",
 
 	"_":"=== conditions ===",
-	"ifdef_auto_download"           :true,
+	"ifdef_auto_download" :true,
 	
-	"ifdef_testing"                 :{{M_TESTING}},	
-	"ifdef_allinc"                  :{{M_ALLINC}},	
-	"ifdef_keepfiles"				:{{M_KEEPFILES}},
+	"ifdef_testing"       :{{M_TESTING}},	
+	"ifdef_allinc"        :{{M_ALLINC}},	
+	"ifdef_keepfiles"     :{{M_KEEPFILES}},
+	
+	"ifdef_legacy"        :{{M_LEGACY}},
 	
 	"_":"=== some tuning ===",
 	"DEFAULT_TESTING_LOGLEVEL" : "7",

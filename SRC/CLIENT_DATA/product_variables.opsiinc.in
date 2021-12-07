@@ -1,7 +1,7 @@
 ;=====================================================================
 ; product specific variables DOUBLE COMMANDER
 ;
-; J. Boettge <boettge@mpi-halle.mpg.de>  2019-07-08 13:04:31 +0200
+; J. Boettge <boettge@mpi-halle.mpg.de>  2021-12-06 16:00:42 +0100
 ;=====================================================================
 
 include_insert "%ScriptPath%\variables.opsiinc"
@@ -172,7 +172,6 @@ set $PSDETAIL_mod$			= ""
 ;-----------------------------------------------------------
 ;*** misc settings
 ;-----------------------------------------------------------
-setlogLevel 				= $LogLvl$
 set $Kill_Running$ 			= GetProductProperty("kill_running", "False")
 
 Set $RegPathUninstall64$ 	= "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
@@ -206,7 +205,7 @@ Set $CheckBin$       	= $StrippedProductId$ + ".exe"
 Set $PathToExe$			= $InstallDir$ + $CheckBin$
 Set $DefaultXML$		= $InstallDir$ + $StrippedProductId$ + ".xml"
 
-Set $LogDir$			= "%SystemDrive%\tmp"
+Set $LogDir$			= "%opsiLogDir%"
 Set $Inst_Log$			= $LogDir$ + "\"+$ProductId$+"_install.log"
 Set $Uninst_Log$		= $LogDir$ + "\"+$ProductId$+"_uninstall.log"
 

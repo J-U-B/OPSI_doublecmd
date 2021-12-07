@@ -1,3 +1,17 @@
+doublecmd 1.0.1-11:
+	* product update --> 1.0.1
+	* download source changed from SourceForge to GitHub
+	* fixed log level warning (removed obsolete setloglevel)
+	* changed log directory to %opsiLogDir%
+	* changed Makefile: all_prod includes o4i
+	* updated helpers.opsifunc v1.4 -> v1.7.1
+	* added legacy code for dfn (stage 1)
+	* make PDF from readme.md
+	* copy changelog to CLIENT_DATA on build (if CHANGELOG_TGT is empty, 
+	  otherwise append changelog to control file)
+	* added: code of conduct
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2021-12-06 16:14:40 +0100
+
 doublecmd 0.9.10-10:
 	* product update --> 0.9.10
 	-- J. Boettge <boettge@mpi-halle.mpg.de>  2021-01-11 14:12:58 +0100
