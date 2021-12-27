@@ -1,3 +1,8 @@
+doublecmd 1.0.2-12:
+	* product update --> 1.0.2
+	* dfn->o4i transition stage 2
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2021-12-27 07:26:08 +0100
+	
 doublecmd 1.0.1-11:
 	* product update --> 1.0.1
 	* download source changed from SourceForge to GitHub

@@ -6,6 +6,7 @@
 ;======================================================================
 [Initial]
 ;======================================================================
+encoding=utf8
 setLogLevel=5
 ; Log Errors in Logfile but don't abort:
 ExitOnError=true
