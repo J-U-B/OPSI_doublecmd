@@ -1,3 +1,8 @@
+doublecmd 1.0.4-14:
+	* Makefile: no binaries in legacy level 3
+	* modified legacy code block
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2022-02-07 08:34:35 +0100
+
 doublecmd 1.0.4-13:
 	* product update --> 1.0.4
 	* dfn->o4i transition stage 3

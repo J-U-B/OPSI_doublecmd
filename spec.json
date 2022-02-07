@@ -1,6 +1,6 @@
 {  
 	"_": "=== OPSI package variables ===",
-	"O_PKG_VER"         : "13",
+	"O_PKG_VER"         : "14",
 	"O_SOFTWARE_VER"    : "1.0.4",
 	"O_SOFTWARE"        : "doublecmd",
 	"O_SOFTWARE_CHANGES": "https://github.com/doublecmd/doublecmd/milestone/4?closed=1",
@@ -15,11 +15,13 @@
 	"_":"=== conditions ===",
 	"ifdef_auto_download" :true,
 	
-	"ifdef_testing"       :{{M_TESTING}},	
-	"ifdef_allinc"        :{{M_ALLINC}},	
-	"ifdef_keepfiles"     :{{M_KEEPFILES}},
+	"ifdef_testing"       : {{M_TESTING}},
+	"ifdef_allinc"        : {{M_ALLINC}},
+	"ifdef_keepfiles"     : {{M_KEEPFILES}},
 	
-	"ifdef_legacy"        :{{M_LEGACY}},
+	"_":"=== legacy package? ===",
+	"ifdef_legacy"        : {{M_LEGACY}},
+	"legacy_level"        : "{{M_LEGACY_LEVEL}}",
 	
 	"_":"=== some tuning ===",
 	"DEFAULT_TESTING_LOGLEVEL" : "7",

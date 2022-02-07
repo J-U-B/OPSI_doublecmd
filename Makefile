@@ -1,8 +1,8 @@
 ############################################################
 # OPSI package Makefile (DOUBLE COMMANDER)
-# Version: 2.5.0
+# Version: 2.6.0
 # Jens Boettge <boettge@mpi-halle.mpg.de>
-# 2021-12-06 16:13:55 +0100
+# 2022-02-07 08:03:21 +0100
 ############################################################
 
 .PHONY: header clean mpimsp o4i dfn mpimsp_test o4i_test dfn_test all_test all_prod all help download
@@ -113,6 +113,9 @@ else
 	BUILD_FORMAT = $(AFY)
 endif
 
+### legacy level:
+LEGACY_LEVEL ?= 0
+
 
 leave_err:
 	exit 1
@@ -168,6 +171,7 @@ dfn: header
 			ORGPREFIX="dfn_" 			\
 			STAGE="release"  			\
 			LEGACY="true"               \
+			LEGACY_LEVEL="3"            \
 	build
 
 mpimsp_test: header
@@ -209,6 +213,7 @@ dfn_test: header
 			ORGPREFIX="dfn_" 			\
 			STAGE="testing"  			\
 			LEGACY="true"               \
+			LEGACY_LEVEL="3"            \
 	build
 
 dfn_test_0: header
@@ -218,6 +223,7 @@ dfn_test_0: header
 			ORGPREFIX="dfn_" 			\
 			STAGE="testing"  			\
 			LEGACY="true"               \
+			LEGACY_LEVEL="3"            \
 	build
 
 dfn_test_noprefix: header
@@ -227,6 +233,7 @@ dfn_test_noprefix: header
 			ORGPREFIX="dfn_" 			\
 			STAGE="testing"  			\
 			LEGACY="true"               \
+			LEGACY_LEVEL="3"            \
 	build
 
 
@@ -337,7 +344,7 @@ copy_from_src:	build_dirs build_md5
 	@if [ -f  "changelog" ]  ; then cp -upL changelog    $(BUILD_DIR)/CLIENT_DATA/changelog.txt; fi	
 	
 	@$(eval NUM_FILES := $(shell ls -l $(DL_DIR)/$(FILES_MASK) 2>/dev/null | wc -l))
-	@if [ "$(ALLINCLUSIVE)" = "true" ]; then \
+	@if [ "$(ALLINCLUSIVE)" = "true" -a "${LEGACY_LEVEL}" != "3" ]; then \
 		echo "  * building batteries included package"; \
 		if [ ! -d "$(BUILD_DIR)/CLIENT_DATA/files" ]; then \
 			echo "    * creating directory $(BUILD_DIR)/CLIENT_DATA/files"; \
@@ -375,15 +382,16 @@ build_json:
 	@echo "* Legacy build: $(LEGACY)"	
 	@echo "* Creating $(BUILD_JSON)"
 	@rm -f $(BUILD_JSON)
-	$(PYSTACHE) $(SPEC)   "{ \"M_TODAY\"      : \"$(TODAY)\",         \
-	                         \"M_STAGE\"      : \"$(STAGE)\",         \
-	                         \"M_ORGNAME\"    : \"$(ORGNAME)\",       \
-	                         \"M_ORGPREFIX\"  : \"$(ORGPREFIX)\",     \
-	                         \"M_TESTPREFIX\" : \"$(TESTPREFIX)\",    \
-	                         \"M_ALLINC\"     : \"$(ALLINCLUSIVE)\",  \
-	                         \"M_LEGACY\"     : \"$(LEGACY)\",        \
-	                         \"M_KEEPFILES\"  : \"$(KEEPFILES)\",     \
-	                         \"M_TESTING\"    : \"$(TESTING)\"        }" > $(BUILD_JSON)
+	$(PYSTACHE) $(SPEC)   "{ \"M_TODAY\"        : \"$(TODAY)\",         \
+	                         \"M_STAGE\"        : \"$(STAGE)\",         \
+	                         \"M_ORGNAME\"      : \"$(ORGNAME)\",       \
+	                         \"M_ORGPREFIX\"    : \"$(ORGPREFIX)\",     \
+	                         \"M_TESTPREFIX\"   : \"$(TESTPREFIX)\",    \
+	                         \"M_ALLINC\"       : \"$(ALLINCLUSIVE)\",  \
+	                         \"M_LEGACY\"       : \"$(LEGACY)\",        \
+	                         \"M_LEGACY_LEVEL\" : \"$(LEGACY_LEVEL)\",  \
+	                         \"M_KEEPFILES\"    : \"$(KEEPFILES)\",     \
+	                         \"M_TESTING\"      : \"$(TESTING)\"        }" > $(BUILD_JSON)
 
 download: build_json
 	@echo "**Debug** [ALLINC=$(ALLINCLUSIVE)]  [ONLY_DOWNLOAD=$(ONLY_DOWNLOAD)]"

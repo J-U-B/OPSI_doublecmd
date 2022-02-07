@@ -2,7 +2,7 @@
 ; setup.ins DOUBLE COMMANDER
 ; Installer type: INNO
 ; 
-; J. Boettge <boettge@mpi-halle.mpg.de>  2022-02-07 07:19:08 +0100
+; J. Boettge <boettge@mpi-halle.mpg.de>  2022-02-07 08:34:02 +0100
 ;======================================================================
 
 ;======================================================================
@@ -180,36 +180,51 @@ endif
 ;-----------------------------------------
 ; This is stage 3
 ;-----------------------------------------
-;logWarning "*******************************************************************************************"
-;logWarning "This package is DEPRECATED!"
-;logWarning "The functionality is completely taken over by o4i_" + $StrippedProductId$+"."
-;logWarning "Use o4i_{{O_SOFTWARE}} instead! This will also remove (dfn_{{O_SOFTWARE}} from the client automatically)"
-;logWarning "dfn_" + $StrippedProductId$ + " can be removed then from your depot."
-;logWarning "*******************************************************************************************"
-
-logError "*******************************************************************************************"
-;logError "This package is DEPRECATED!"
-logError "This package is END OF LIFE!"
-logError "This package will not be maintained any longer!"
-logError "The functionality is completely taken over by o4i_" + $StrippedProductId$+"."
-logError "Use o4i_{{O_SOFTWARE}} instead! (dfn_{{O_SOFTWARE}} will be removed then automatically)"
-logError "dfn_" + $StrippedProductId$ + " should be removed the then from your depot."
-; on stage 3:
-logError "*******************************************************************************************"
-logError "This is a FATAL ERROR!"
-logError "*******************************************************************************************"
-
-Message "Updating status information for this package on depot"
-set $result$ = productSetActionRequest($ProductId$, "none")
-set $result$ = "Package is deprecated!"
-; on stage 3:
-set $result$ = "Package is end of life!"
-
-;set $result$ = currentProductSetReport($result$)
-set $result$ = productExtUpdateOnClient($ProductId$, "installed", "installed", "None", $result$)
-;set $result$ = productExtUpdateOnClient($ProductId$, "forbidden", "not_installed", "failed", "Discontinued package!")
-;isSuspended
-isFatalError "Discontinued package!"
+if  ("{{legacy_level}}" = "1")
+	logWarning "*******************************************************************************************"
+	logWarning "This package is DEPRECATED!"
+	logWarning "The functionality is completely taken over by o4i_" + $StrippedProductId$+"."
+	logWarning "Use o4i_{{O_SOFTWARE}} instead! This will also remove (dfn_{{O_SOFTWARE}} from the client automatically)"
+	logWarning "dfn_" + $StrippedProductId$ + " can be removed then from your depot."
+	logWarning "*******************************************************************************************"
+	Message "Updating status information for this package on depot"
+	set $result$ = productSetActionRequest($ProductId$, "none")
+	set $result$ = "Package is deprecated!"
+	set $result$ = currentProductSetReport($result$)
+	set $result$ = productExtUpdateOnClient($ProductId$, "installed", "installed", "None", $result$)
+	isSuspended
+endif
+if  ("{{legacy_level}}" = "2")
+	logError "*******************************************************************************************"
+	logError "This package is DEPRECATED!"
+	logError "This package will not be maintained any longer!"
+	logError "The functionality is completely taken over by o4i_" + $StrippedProductId$+"."
+	logError "Use o4i_{{O_SOFTWARE}} instead! (dfn_{{O_SOFTWARE}} will be removed then automatically)"
+	logError "dfn_" + $StrippedProductId$ + " should be removed the then from your depot."
+	Message "Updating status information for this package on depot"
+	set $result$ = productSetActionRequest($ProductId$, "none")
+	set $result$ = "Package is deprecated!"
+	set $result$ = currentProductSetReport($result$)
+	set $result$ = productExtUpdateOnClient($ProductId$, "installed", "installed", "None", $result$)
+	isSuspended
+endif
+if  ("{{legacy_level}}" = "3")
+	logError "*******************************************************************************************"
+	logError "This package is END OF LIFE!"
+	logError "This package will not be maintained any longer!"
+	logError "The functionality is completely taken over by o4i_" + $StrippedProductId$+"."
+	logError "Use o4i_{{O_SOFTWARE}} instead!"
+	logError "dfn_" + $StrippedProductId$ + " should be removed the then from your depot."
+	logError "*******************************************************************************************"
+	logError "This is a FATAL ERROR!"
+	logError "*******************************************************************************************"
+	Message "Updating status information for this package on depot"
+	set $result$ = productSetActionRequest($ProductId$, "none")
+	set $result$ = "Package is end of life!"
+	set $result$ = productExtUpdateOnClient($ProductId$, "forbidden", "not_installed", "failed", "Discontinued package!")
+	; isFatalError "Discontinued package!"
+	isSuspended
+endif
 {{/ifdef_legacy}}
 
  
