@@ -1,9 +1,9 @@
 {  
 	"_": "=== OPSI package variables ===",
-	"O_PKG_VER"         : "12",
-	"O_SOFTWARE_VER"    : "1.0.3",
+	"O_PKG_VER"         : "13",
+	"O_SOFTWARE_VER"    : "1.0.4",
 	"O_SOFTWARE"        : "doublecmd",
-	"O_SOFTWARE_CHANGES": "https://github.com/doublecmd/doublecmd/milestone/3?closed=1",
+	"O_SOFTWARE_CHANGES": "https://github.com/doublecmd/doublecmd/milestone/4?closed=1",
 	"O_RELEASE_DATE"    : "{{M_TODAY}}",
 	"O_INST_LOG"        : "/tmp/{{M_ORGPREFIX}}doublecmd__opsi_package_install.log",
 	
