@@ -2,7 +2,7 @@
 ; delsub.opsiinc DOUBLE COMMANDER
 ; Uninstaller type: INNO or MSI
 ;
-; J. Boettge <boettge@mpi-halle.mpg.de>  2019-07-08 08:03:05 +0200
+; J. Boettge <boettge@mpi-halle.mpg.de>  2022-04-11 12:14:11 +0200
 ;=====================================================================
 
 
@@ -43,21 +43,18 @@ if not ( count ($ResultList$) = "0" )
 			include_insert "%ScriptPath%\custom\" + $CustomPostUninstall$
 			ShowBitmap $Img_Uninstall$ $ProductName$
 		endif
-	endif	
-	
-	;=== update productOnClient information on depot server
-	Message "Updating status information on depot"
-	set $result$ = removeProductVerOnClientStatus($ProductFilter$, $ProductVersionFilter$)
-	
-	;=== measure time
-	set $TimeDiff$ = getDiffTimeSec
-	Message  "Removal time: " + $TimeDiff$ + " seconds"	
-	
+	endif
 else
 	comment "Empty result list while searching for " + $ProductName$ + " in registry - does not seem to be installed"
-endif	
+endif
 
+;=== update productOnClient information on depot server
+Message "Updating status information on depot"
+set $result$ = removeProductVerOnClientStatus($ProductFilter$, $ProductVersionFilter$)
 
+;=== measure time
+set $TimeDiff$ = getDiffTimeSec
+Message  "Removal time: " + $TimeDiff$ + " seconds"	
 
 
 ;=======================================

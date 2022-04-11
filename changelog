@@ -1,3 +1,10 @@
+doublecmd 1.0.5-15:
+	* product update --> 1.0.5
+	* updated helpers.opsifunc -> v1.9.0
+	* delsub.opsiinc: update productOnClient even if no product found in registry
+	* adjusted legacy code in Makefile and setup.opsiscript
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2022-04-11 12:35:58 +0200
+
 doublecmd 1.0.4-14:
 	* Makefile: no binaries in legacy level 3
 	* modified legacy code block

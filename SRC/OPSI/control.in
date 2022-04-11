@@ -1,6 +1,6 @@
 {{! ========================================================================== }}
 {{!  Double Commander CONTROL                                                  }}
-{{!  J. Boettge <boettge@mpi-halle.mpg.de> 2020-11-27 21:59:47 +0100           }}
+{{!  J. Boettge <boettge@mpi-halle.mpg.de> 2022-04-11 12:50:06 +0200           }}
 {{! ========================================================================== }}
 [Package]
 version: {{O_PKG_VER}}
@@ -23,7 +23,7 @@ description: • Double Commander is a cross platform open source file manager w
 advice:
 {{/ifdef_legacy}}
 {{#ifdef_legacy}}
-advice: Important note: This package is DEPRECATED! Use o4i_{{O_SOFTWARE}} instead!
+advice: Important note: This package is END OF LIFE! Use o4i_{{O_SOFTWARE}} instead!
  (There is no need to set this package to uninstall. This will be done automatically.)
 {{/ifdef_legacy}}
 version: {{O_SOFTWARE_VER}}

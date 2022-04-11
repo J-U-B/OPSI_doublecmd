@@ -1,8 +1,8 @@
 ############################################################
 # OPSI package Makefile (DOUBLE COMMANDER)
-# Version: 2.6.0
+# Version: 2.7.0
 # Jens Boettge <boettge@mpi-halle.mpg.de>
-# 2022-02-07 08:03:21 +0100
+# 2022-04-11 07:14:42 +0200
 ############################################################
 
 .PHONY: header clean mpimsp o4i dfn mpimsp_test o4i_test dfn_test all_test all_prod all help download
@@ -339,12 +339,12 @@ copy_from_src:	build_dirs build_md5
 	@cp -upr $(SRC_DIR)/CLIENT_DATA/*.opsiscript  $(BUILD_DIR)/CLIENT_DATA/
 	@cp -upr $(SRC_DIR)/CLIENT_DATA/*.opsiinc     $(BUILD_DIR)/CLIENT_DATA/
 	@cp -upr $(SRC_DIR)/CLIENT_DATA/*.opsifunc    $(BUILD_DIR)/CLIENT_DATA/
-	
+
 	@if [ -f  "readme.pdf" ] ; then cp -upL readme.pdf   $(BUILD_DIR)/CLIENT_DATA/; fi
-	@if [ -f  "changelog" ]  ; then cp -upL changelog    $(BUILD_DIR)/CLIENT_DATA/changelog.txt; fi	
-	
+	@if [ -f  "changelog" ]  ; then cp -upL changelog    $(BUILD_DIR)/CLIENT_DATA/changelog.txt; fi
+
 	@$(eval NUM_FILES := $(shell ls -l $(DL_DIR)/$(FILES_MASK) 2>/dev/null | wc -l))
-	@if [ "$(ALLINCLUSIVE)" = "true" -a "${LEGACY_LEVEL}" != "3" ]; then \
+	@if [ "$(ALLINCLUSIVE)" = "true" -a "${LEGACY_LEVEL}" -lt "3" ]; then \
 		echo "  * building batteries included package"; \
 		if [ ! -d "$(BUILD_DIR)/CLIENT_DATA/files" ]; then \
 			echo "    * creating directory $(BUILD_DIR)/CLIENT_DATA/files"; \
