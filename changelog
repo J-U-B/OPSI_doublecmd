@@ -1,3 +1,10 @@
+doublecmd 1.0.7-16:
+	* product update --> 1.0.7
+	* enhanced handling of custom scripts: use SUB_POST_INSTALL and SUB_POST_UNINSTALL sections (optional)
+	* added [EOF_*] sections to setup and delsub (for incorrectly structured custom scripts)
+	* updated example custom post (un)install script
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2022-09-12 07:24:53 +0200
+
 doublecmd 1.0.6-15:
 	* product update --> 1.0.6
 	-- J. Boettge <boettge@mpi-halle.mpg.de>  2022-06-07 07:24:36 +0200

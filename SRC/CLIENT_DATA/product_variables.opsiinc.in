@@ -3,7 +3,7 @@
 ;
 ; J. Boettge <boettge@mpi-halle.mpg.de>  2021-12-06 16:00:42 +0100
 ;=====================================================================
-
+encoding=utf8
 include_insert "%ScriptPath%\variables.opsiinc"
 
 Set $MAP$ 				= getProductMap
