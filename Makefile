@@ -1,8 +1,8 @@
 ############################################################
 # OPSI package Makefile (DOUBLE COMMANDER)
-# Version: 2.7.0
+# Version: 2.7.1
 # Jens Boettge <boettge@mpi-halle.mpg.de>
-# 2022-04-11 07:14:42 +0200
+# 2022-12-16 21:22:18 +0100
 ############################################################
 
 .PHONY: header clean mpimsp o4i dfn mpimsp_test o4i_test dfn_test all_test all_prod all help download
@@ -364,7 +364,7 @@ copy_from_src:	build_dirs build_md5
 		rm -rf $(BUILD_DIR)/CLIENT_DATA/files ; \
 	fi
 	@if [ -d "$(SRC_DIR)/CLIENT_DATA/custom" ]; then  cp -upr $(SRC_DIR)/CLIENT_DATA/custom     $(BUILD_DIR)/CLIENT_DATA/ ; fi
-	@if [ -d "$(SRC_DIR)/CLIENT_DATA/custom" ]; then  cp -upr $(SRC_DIR)/CLIENT_DATA/config     $(BUILD_DIR)/CLIENT_DATA/ ; fi
+	@if [ -d "$(SRC_DIR)/CLIENT_DATA/config" ]; then  cp -upr $(SRC_DIR)/CLIENT_DATA/config     $(BUILD_DIR)/CLIENT_DATA/ ; fi
 	@if [ -d "$(SRC_DIR)/CLIENT_DATA/files" ];  then  cp -upr $(SRC_DIR)/CLIENT_DATA/files      $(BUILD_DIR)/CLIENT_DATA/ ; fi
 	@if [ -d "$(SRC_DIR)/CLIENT_DATA/images" ];  then  \
 		mkdir -p "$(BUILD_DIR)/CLIENT_DATA/images"; \
