@@ -1,3 +1,18 @@
+doublecmd 1.1.11-19:
+	* product update --> 1.1.11 preview
+	* Makefile:
+		* refined Makefile for OPSI 4.3 (handle compression)
+		* use pystache3 instead of custom pystache_opsi.py; modified usage
+		* copy changelog (if exists) also to CLIENT_DATA
+		* updated `make help`
+		* dfn packages no longer included in `all*`-targets
+	* removed custom pystache_opsi.py
+	* update readme
+	* update helpers.opsifunc -> v1.9.1
+	* removed deprecated INITIAL sections
+	* added some utf8 encoding markers
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2024-04-02 07:21:49 +0200
+
 doublecmd 1.0.11-18:
 	* product update --> 1.0.11
 	-- J. Boettge <boettge@mpi-halle.mpg.de>  2023-04-03 06:39:12 +0200

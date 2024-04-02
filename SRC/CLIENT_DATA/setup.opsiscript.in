@@ -2,11 +2,11 @@
 ; setup.ins DOUBLE COMMANDER
 ; Installer type: INNO
 ;
-; J. Boettge <boettge@mpi-halle.mpg.de>  2022-09-12 07:21:38 +0200
+; J. Boettge <boettge@mpi-halle.mpg.de>  2024-04-02 07:27:51 +0200
 ;======================================================================
 
 ;======================================================================
-[Initial]
+[Actions]
 ;======================================================================
 encoding=utf8
 setLogLevel=5
@@ -18,10 +18,8 @@ ScriptErrorMessages=off
 TraceMode=off 
 ; Let started programs run in front of the winst window
 StayOnTop=false 
+;----------------------------------------------------------------------
 
-;======================================================================
-[Actions]
-;======================================================================
 include_insert "%ScriptPath%\product_variables.opsiinc"
 
 

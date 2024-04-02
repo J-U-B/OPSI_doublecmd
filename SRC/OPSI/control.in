@@ -41,7 +41,8 @@ userLoginScript:
 [ProductProperty]
 type: bool
 name: kill_running
-description: kill running instance (for software on_demand)
+description: kill running instance
+  (defer if set to `false` and process is found)
 default: False
 
 [ProductProperty]

@@ -4,8 +4,9 @@
 ; This file contains all possible variables, excluding the opsi-system
 ; variables, for the opsi-winst scripts in use.
 ;
-; J. Boettge <boettge@mpi-halle.mpg.de>  2019-07-08 12:23:31 +0200
+; J. Boettge <boettge@mpi-halle.mpg.de>  2024-04-02 07:24:17 +0200
 ;=====================================================================
+encoding=utf8
 
 DefStringList $LanguageMap$
 DefStringList $MAP$
