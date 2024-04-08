@@ -1,3 +1,8 @@
+doublecmd 1.1.12-20:
+	* product update --> 1.1.12 gamma
+	* Software Name in spec.json
+	-- J. Boettge <boettge@mpi-halle.mpg.de>  2024-04-08 07:15:46 +0200
+
 doublecmd 1.1.11-19:
 	* product update --> 1.1.11 preview
 	* Makefile:

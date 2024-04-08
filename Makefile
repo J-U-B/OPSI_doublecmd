@@ -2,7 +2,7 @@
 # OPSI package Makefile (DOUBLE COMMANDER)
 # Version: 3.0.0
 # Jens Boettge <boettge@mpi-halle.mpg.de>
-# 2024-04-02 08:37:00 +0200
+# 2024-04-08 07:18:10 +0200
 ############################################################
 
 .PHONY: header clean mpimsp o4i dfn mpimsp_test o4i_test dfn_test all_test all_prod all help download pdf install
@@ -77,16 +77,16 @@ endif
 
 SW_VER := $(shell grep '"O_SOFTWARE_VER"' $(SPEC)     | sed -e 's/^.*\s*:\s*\"\(.*\)\".*$$/\1/' )
 # SW_BUILD := $(shell grep '"O_SOFTWARE_BUILD"' $(SPEC) | sed -e 's/^.*\s*:\s*\"\(.*\)\".*$$/\1/' )
-SW_NAME := $(shell grep '"O_SOFTWARE"' $(SPEC)        | sed -e 's/^.*\s*:\s*\"\(.*\)\".*$$/\1/' )
+SW_ID := $(shell grep '"O_SOFTWARE"' $(SPEC)        | sed -e 's/^.*\s*:\s*\"\(.*\)\".*$$/\1/' )
 PKG_BUILD := $(shell grep '"O_PKG_VER"' $(SPEC)       | sed -e 's/^.*\s*:\s*\"\(.*\)\".*$$/\1/' )
 
-#FILES_MASK := $(SW_NAME)-$(SW_VER)-$(SW_BUILD)-*.exe
+#FILES_MASK := $(SW_ID)-$(SW_VER)-$(SW_BUILD)-*.exe
 # doublecmd-0.8.4.i386-win32.exe   --> doublecmd-0.8.4-x32.exe
 # doublecmd-0.8.4.x86_64-win64.exe --> doublecmd-0.8.4-x64.exe
-FILES_MASK := $(SW_NAME)-$(SW_VER)-x*.exe
+FILES_MASK := $(SW_ID)-$(SW_VER)-x*.exe
 FILES_EXPECTED = 2
 
-MD5SUM_FILE := $(SW_NAME).md5sums
+MD5SUM_FILE := $(SW_ID).md5sums
 
 ### Only download packages?
 ifeq ($(MAKECMDGOALS),download)
@@ -149,9 +149,9 @@ endif
 
 ### Customname
 ifeq ($(CUSTOMNAME),"")
-	PKGNAME := ${TESTPREFIX}$(ORGPREFIX)$(SW_NAME)_${SW_VER}-$(PKG_BUILD)$(CUSTOMNAME)
+	PKGNAME := ${TESTPREFIX}$(ORGPREFIX)$(SW_ID)_${SW_VER}-$(PKG_BUILD)$(CUSTOMNAME)
 else
-	PKGNAME := ${TESTPREFIX}$(ORGPREFIX)$(SW_NAME)_${SW_VER}-$(PKG_BUILD)~$(CUSTOMNAME)
+	PKGNAME := ${TESTPREFIX}$(ORGPREFIX)$(SW_ID)_${SW_VER}-$(PKG_BUILD)~$(CUSTOMNAME)
 endif
 
 ### Organization flags
@@ -167,7 +167,7 @@ leave_err:
 
 var_test:
 	@echo "=================================================================="
-	@echo "* Software Name         : [$(SW_NAME)]"
+	@echo "* Software Id           : [$(SW_ID)]"
 	@echo "* Software Version      : [$(SW_VER)]"
 	@# @echo "* Software Build        : [$(SW_BUILD)]"
 	@echo "* Package Build         : [$(PKG_BUILD)]"
@@ -186,7 +186,7 @@ var_test:
 	@echo "* OPSI Builder Version  : [$(OPSI_VERSION)]"
 	@echo "=================================================================="
 	@echo "* Installer files in $(DL_DIR):"
-	@for F in `ls -1 $(DL_DIR)/$(FILES_MASK) | sed -re 's/.*\/(.*)$$/\1/' `; do echo "    $$F"; done 
+	@for F in `ls -1 $(DL_DIR)/$(FILES_MASK) | sed -re 's/.*\/(.*)$$/\1/' `; do echo "    $$F"; done
 	@ $(eval NUM_FILES := $(shell ls -l $(DL_DIR)/$(FILES_MASK) 2>/dev/null | wc -l))
 	@echo "* $(NUM_FILES) files found"
 	@echo "=================================================================="
@@ -384,7 +384,7 @@ build_md5:
 	if [ -f "$(BUILD_DIR)/CLIENT_DATA/$(MD5SUM_FILE)" ]; then \
 		rm -f $(BUILD_DIR)/CLIENT_DATA/$(MD5SUM_FILE); \
 	fi
-	@grep -i "$(SW_NAME).$(SW_VER)." $(DL_DIR)/$(MD5SUM_FILE)>> $(BUILD_DIR)/CLIENT_DATA/$(MD5SUM_FILE) 
+	@grep -i "$(SW_ID).$(SW_VER)." $(DL_DIR)/$(MD5SUM_FILE)>> $(BUILD_DIR)/CLIENT_DATA/$(MD5SUM_FILE)
 
 copy_from_src:	build_dirs build_md5
 	@echo "* Copying files"
@@ -455,7 +455,7 @@ build_json:
 download: build_json
 	@echo "[DBG] Vars: [ALLINC=$(ALLINCLUSIVE)]  [ONLY_DOWNLOAD=$(ONLY_DOWNLOAD)]"
 	@$(eval NUM_FOUND := $(shell ls -l $(DL_DIR)/$(FILES_MASK) 2>/dev/null | wc -l))
-	@echo "[DBG] $(SW_NAME) installer packages found: $(NUM_FOUND), expected: $(FILES_EXPECTED)"
+	@echo "[DBG] $(SW_ID) installer packages found: $(NUM_FOUND), expected: $(FILES_EXPECTED)"
 	@if [ "$(ALLINCLUSIVE)" = "true" -o  $(ONLY_DOWNLOAD) = "true" -o $(NUM_FOUND) -ne $(FILES_EXPECTED) ]; then \
 		rm -f $(DOWNLOAD_SH) ;\
 		TEMPLATE=`cat $(DOWNLOAD_SH_IN)`; \
@@ -522,7 +522,7 @@ build: download pdf clean copy_from_src
 
 
 install:
-	@$(eval PACKAGES_FOUND := $(shell ls -1 $(PACKAGE_DIR)/*.opsi | grep -E "$(SW_NAME)_$(SW_VER)-$(PKG_BUILD)(~dl){0,1}.opsi$$"))
+	@$(eval PACKAGES_FOUND := $(shell ls -1 $(PACKAGE_DIR)/*.opsi | grep -E "$(SW_ID)_$(SW_VER)-$(PKG_BUILD)(~dl){0,1}.opsi$$"))
 	@$(eval PKG_NUM := $(shell echo $(PACKAGES_FOUND) | wc -w))
 	@#echo "[$(PACKAGES_FOUND)]"
 	@echo "Number of installable packages found: $(PKG_NUM)"
