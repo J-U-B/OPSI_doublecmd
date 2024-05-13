@@ -1,6 +1,6 @@
 {
 	"_": "=== OPSI package variables ===",
-	"O_PKG_VER"         : "20",
+	"O_PKG_VER"         : "21",
 	"O_SOFTWARE_VER"    : "1.1.14",
 	"O_SOFTWARE"        : "doublecmd",
 	"O_SOFTWARE_NAME"   : "Double Commander (gamma)",

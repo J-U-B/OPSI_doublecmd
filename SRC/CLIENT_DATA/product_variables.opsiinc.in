@@ -6,14 +6,14 @@
 encoding=utf8
 include_insert "%ScriptPath%\variables.opsiinc"
 
-Set $MAP$ 				= getProductMap
-Set $FullProductId$   	= getValue("id", $MAP$)
-Set $ProductName$     	= getValue("name", $MAP$)
-Set $Version$         	= getValue("ProductVersion", $MAP$)
-Set $SystemType$      	= GetSystemType
-Set $NTVersion$   		= GetMsVersionInfo
-Set $LanguageMap$ 		= GetLocaleInfoMap
-Set $System_Language$ 	= lower(getValue("system_default_language_id", $LanguageMap$))
+Set $MAP$				= getProductMap
+Set $FullProductId$		= getValue("id", $MAP$)
+Set $ProductName$		= getValue("name", $MAP$)
+Set $Version$			= getValue("ProductVersion", $MAP$)
+Set $SystemType$		= GetSystemType
+Set $NTVersion$			= GetMsVersionInfo
+Set $LanguageMap$		= GetLocaleInfoMap
+Set $System_Language$	= lower(getValue("system_default_language_id", $LanguageMap$))
 Set $Stage$				= lower("{{STAGE}}")
 
 requiredWinstVersion >= "4.11.6"
@@ -47,8 +47,8 @@ Set $LogLevelDefault$ = GetProductProperty("log_level","default")
 if (strPos($FullProductId$, "0_") = "0") and (strPos($FullProductId$, "test_") = "0") and (strPos($Stage$,"test") = "0")
 	; not a testing package
 	comment "INFO: RELEASE package detected"
-	set $ProductId$  	= $FullProductId$ 
-	set $Testing$ 		= "false"
+	set $ProductId$		= $FullProductId$
+	set $Testing$		= "false"
 	if ($LogLevelDefault$ = "default")
 		set $LogLevelDefault$  	= "{{DEFAULT_RELEASE_LOGLEVEL}}"
 	endif
@@ -60,9 +60,9 @@ else
 	else
 		set $ProductId$	= strPart($FullProductId$, calculate(strPos($FullProductId$,"_") + "+1"), strLength($FullProductId$))
 	endif
-	set $Testing$ 		= "true"
+	set $Testing$ = "true"
 	if ($LogLevelDefault$ = "default")
-		set $LogLevelDefault$  	= "{{DEFAULT_TESTING_LOGLEVEL}}"
+		set $LogLevelDefault$	= "{{DEFAULT_TESTING_LOGLEVEL}}"
 	endif
 endif
 setlogLevel = $LogLevelDefault$
@@ -120,13 +120,13 @@ endif
 
 Set $sw_arch$ = GetProductProperty("install_architecture","sysnative")
 Set $sw_arch$ = takeString(0, splitString($sw_arch$, " "))
-; Set $sw_arch$		  = "32"
+; Set $sw_arch$			= "32"
 
 if ( $sw_arch$ = "sysnative" )
-	if ($SystemType$ = "x64")
-		Set $sw_arch$ = "64"
+	if ($SystemType$ ="x64")
+		Set $sw_arch$ =	"64"
 	else
-		Set $sw_arch$ = "32"
+		Set $sw_arch$ =	"32"
 	endif
 endif
 
@@ -146,36 +146,36 @@ endif
 ;-----------------------------------------------------------
 ;*** property: default_language - "auto", "de, "en", ...
 ;-----------------------------------------------------------
-Set $sw_lang$ 				= GetProductProperty("default_language","sysnative")
+Set $sw_lang$				= GetProductProperty("default_language","sysnative")
 
 ;-----------------------------------------------------------
 ;*** property: create desktop/startmenu/quickstart link?
 ;-----------------------------------------------------------
-Set $pr_DesktopLink$ 		= GetProductProperty("link_desktop","False")
+Set $pr_DesktopLink$		= GetProductProperty("link_desktop","False")
 
 ;-----------------------------------------------------------
 ;*** properties: custom post install/uninstall
 ;                config template
 ;-----------------------------------------------------------
-set $CustomPostInstall$ 	= getProductProperty("custom_post_install","none")
-set $CustomPostUninstall$ 	= getProductProperty("custom_post_uninstall","none")
-set $CustomConfig$ 			= getProductProperty("custom_default_config","none")
+set $CustomPostInstall$	= getProductProperty("custom_post_install","none")
+set $CustomPostUninstall$	= getProductProperty("custom_post_uninstall","none")
+set $CustomConfig$			= getProductProperty("custom_default_config","none")
 
 ;-----------------------------------------------------------
 ;*** select PSDETAIL:
-set $PSDETAIL$ 			= "%ScriptPath%\bin\psdetail.exe"
+set $PSDETAIL$			= "%ScriptPath%\bin\psdetail.exe"
 if (CompareDotSeparatedNumbers($NTVersion$, ">=", "10.0"))
-	set $PSDETAIL$ 			= "%ScriptPath%\bin\psdetail4.exe"
+	set $PSDETAIL$			= "%ScriptPath%\bin\psdetail4.exe"
 endif
 set $PSDETAIL_mod$			= ""
 
 ;-----------------------------------------------------------
 ;*** misc settings
 ;-----------------------------------------------------------
-set $Kill_Running$ 			= GetProductProperty("kill_running", "False")
+set $Kill_Running$			= GetProductProperty("kill_running", "False")
 
-Set $RegPathUninstall64$ 	= "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
-Set $RegPathUninstall32$ 	= "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+Set $RegPathUninstall64$	= "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+Set $RegPathUninstall32$	= "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
 
 ;-------------------------------------------------------
 ; filter for opsiServiceCall productOnClient_getObjects:
@@ -193,15 +193,15 @@ include_append "%ScriptPath%\exitcode_msi.opsiinc"
 ;include_append "%ScriptPath%\exitcode_nsis.opsiinc"
 
 ; packages (for example):
-; 		doublecmd-0.8.4-x32.exe
-; 		doublecmd-0.8.4-x64.exe
+;		doublecmd-0.8.4-x32.exe
+;		doublecmd-0.8.4-x64.exe
 ;Set $Installer$		= "%ScriptPath%\files\" + $StrippedProductId$ + "-{{O_SOFTWARE_VER}}-{{O_SOFTWARE_BUILD}}-" + $sw_arch$ + "bit"+ ".exe"
-Set $Installer$		  	= "%ScriptPath%\files\" + $StrippedProductId$ + "-{{O_SOFTWARE_VER}}-x" + $sw_arch$ + ".exe"
-;Set $InstallDir$      	= $InstallBase$ + "\" + stringReplace($ProductName$," ", "") + "\"
-;Set $InstallDir$      	= $InstallBase$ + "\" + $ProductName$ + "\"
-Set $InstallDir$      	= $InstallBase$ + "\" + $StrippedProductId$ + "\"
-Set $MinimumSpace$    	= "35 MB"
-Set $CheckBin$       	= $StrippedProductId$ + ".exe"
+Set $Installer$			= "%ScriptPath%\files\" + $StrippedProductId$ + "-{{O_SOFTWARE_VER}}-x" + $sw_arch$ + ".exe"
+;Set $InstallDir$		= $InstallBase$ + "\" + stringReplace($ProductName$," ", "") + "\"
+;Set $InstallDir$		= $InstallBase$ + "\" + $ProductName$ + "\"
+Set $InstallDir$		= $InstallBase$ + "\" + $StrippedProductId$ + "\"
+Set $MinimumSpace$		= "35 MB"
+Set $CheckBin$			= $StrippedProductId$ + ".exe"
 Set $PathToExe$			= $InstallDir$ + $CheckBin$
 Set $DefaultXML$		= $InstallDir$ + $StrippedProductId$ + ".xml"
 
@@ -209,22 +209,24 @@ Set $LogDir$			= "%opsiLogDir%"
 Set $Inst_Log$			= $LogDir$ + "\"+$ProductId$+"_install.log"
 Set $Uninst_Log$		= $LogDir$ + "\"+$ProductId$+"_uninstall.log"
 
-Set $SearchPattern$ 	= $ProductName$
-Set $Uninst_ID_std$	   	= $ProductName$
-Set $Uninst_Prg$       	= "unins000.exe"
-Set $Uninstaller$	   	= $InstallDir$ + $Uninst_Prg$
+; Set $SearchPattern$	= $ProductName$
+Set $SearchPattern$		= stringReplaceRegex($ProductName$, "\s\(.*", "")
+; Set $Uninst_ID_std$	= $ProductName$
+Set $Uninst_ID_std$		= stringReplaceRegex($ProductName$, "\s\(.*", "")
+Set $Uninst_Prg$		= "unins000.exe"
+Set $Uninstaller$		= $InstallDir$ + $Uninst_Prg$
 ; ...oder UninstallString aus Registry
 
 ;=== INNO ===
-Set $INNO_Inst_Opts$    = '/SP- /SILENT /NOCANCEL /NORESTART /CLOSEAPPLICATIONS /SUPPRESSMSGBOXES /LANG=english /DIR="' + $InstallDir$ +'" /GROUP="' + $ProductName$ +'" /LOG="'+ $Inst_Log$ +'"'
-Set $INNO_Uninst_Opts$  = '/SILENT /NORESTART /LOG="'+ $Uninst_Log$ +'"'
+Set $INNO_Inst_Opts$	= '/SP- /SILENT /NOCANCEL /NORESTART /CLOSEAPPLICATIONS /SUPPRESSMSGBOXES /LANG=english /DIR="' + $InstallDir$ +'" /GROUP="' + $ProductName$ +'" /LOG="'+ $Inst_Log$ +'"'
+Set $INNO_Uninst_Opts$	= '/SILENT /NORESTART /LOG="'+ $Uninst_Log$ +'"'
 
 ;=== MSI === (not used for installation here)
-Set $MSI_Inst_Opts$ 	= '/qb-! /norestart /l+* "' + $Inst_Log$ +'" INSTALLDIR="' + $InstallDir$ + '" REBOOT=ReallySuppress ALLUSERS=1'
-Set $MSI_Uninst_Opts$  	= '/qb-! /norestart /l+* "' + $Uninst_Log$ + '" REBOOT=ReallySuppress'
+Set $MSI_Inst_Opts$		= '/qb-! /norestart /l+* "' + $Inst_Log$ +'" INSTALLDIR="' + $InstallDir$ + '" REBOOT=ReallySuppress ALLUSERS=1'
+Set $MSI_Uninst_Opts$	= '/qb-! /norestart /l+* "' + $Uninst_Log$ + '" REBOOT=ReallySuppress'
 Set $MSI_Inst_Cmd$		= 'msiexec /i "' + $Installer$ +'" ' + $Inst_Opts$
-Set $MSI_Uninst_Cmd$ 	= "msiexec /x $ProductKey$ " + $Uninst_Opts$
+Set $MSI_Uninst_Cmd$	= "msiexec /x $ProductKey$ " + $Uninst_Opts$
 
 ;=== NSIS === (not used here)
-;Set $NSIS_Inst_Opts$  	= "/S  /D=" + $InstallDir$
+;Set $NSIS_Inst_Opts$	= "/S  /D=" + $InstallDir$
 ;Set $NSIS_Uninst_Opts$	= "/S"
