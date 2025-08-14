@@ -1,10 +1,10 @@
 {
 	"_": "=== OPSI package variables ===",
 	"O_PKG_VER"         : "22",
-	"O_SOFTWARE_VER"    : "1.1.27",
+	"O_SOFTWARE_VER"    : "1.1.28",
 	"O_SOFTWARE"        : "doublecmd",
 	"O_SOFTWARE_NAME"   : "Double Commander (gamma)",
-	"O_SOFTWARE_CHANGES": "https://github.com/doublecmd/doublecmd/compare/v1.1.26...v1.1.27",
+	"O_SOFTWARE_CHANGES": "https://github.com/doublecmd/doublecmd/compare/v1.1.27...v1.1.28",
 	"O_RELEASE_DATE"    : "{{M_TODAY}}",
 	"O_INST_LOG"        : "/tmp/{{M_ORGPREFIX}}doublecmd__opsi_package_install.log",
 
